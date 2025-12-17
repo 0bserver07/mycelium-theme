@@ -1,0 +1,75 @@
+---
+/**
+ * Posts Listing Page
+ *
+ * Lists all garden posts/notes
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+import { siteConfig } from '../../config';
+
+// Get all posts, filter drafts in production
+const allPosts = await getCollection('posts', ({ data }) => {
+  return import.meta.env.PROD ? !data.draft : true;
+});
+
+// Sort by planted date, newest first
+const posts = allPosts.sort(
+  (a, b) => b.data.planted.valueOf() - a.data.planted.valueOf()
+);
+
+// Get unique tags
+const allTags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort();
+---
+
+<BaseLayout title="Garden" description="All notes in the digital garden">
+  <Header slot="header" />
+
+  <div class="max-w-5xl mx-auto px-4 py-8 sm:py-12">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-primary-900 dark:text-primary-100 mb-2">
+        The Garden
+      </h1>
+      <p class="text-primary-600 dark:text-primary-400">
+        {posts.length} notes growing in this garden
+      </p>
+    </div>
+
+    <!-- Tags Filter (if there are tags) -->
+    {allTags.length > 0 && (
+      <div class="mb-8 flex flex-wrap gap-2">
+        <span class="text-sm text-primary-600 dark:text-primary-400 mr-2">Filter by tag:</span>
+        {allTags.map((tag) => (
+          <a
+            href={`/posts/tag/${tag}/`}
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-700 dark:bg-primary-800 dark:text-primary-300 hover:bg-accent-100 dark:hover:bg-accent-900/30 hover:text-accent-700 dark:hover:text-accent-300 transition-colors"
+          >
+            #{tag}
+          </a>
+        ))}
+      </div>
+    )}
+
+    <!-- Posts Grid -->
+    {posts.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-12">
+        <p class="text-primary-600 dark:text-primary-400">
+          No notes have been planted yet. Start adding content to see them here!
+        </p>
+      </div>
+    )}
+  </div>
+
+  <Footer slot="footer" />
+</BaseLayout>

@@ -1,0 +1,107 @@
+---
+/**
+ * GrowthIndicator Component
+ *
+ * Visual indicator for digital garden note growth status:
+ * - Seedling: New idea, rough draft
+ * - Budding: Developing, needs work
+ * - Evergreen: Mature, well-maintained
+ */
+
+import type { GrowthStatus } from '../types';
+
+export interface Props {
+  status: GrowthStatus;
+  showLabel?: boolean;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { status, showLabel = false, size = 'md' } = Astro.props;
+
+const sizeClasses = {
+  sm: 'w-4 h-4',
+  md: 'w-5 h-5',
+  lg: 'w-6 h-6',
+};
+
+const labels = {
+  seedling: 'Seedling',
+  budding: 'Budding',
+  evergreen: 'Evergreen',
+};
+
+const descriptions = {
+  seedling: 'A new idea, freshly planted',
+  budding: 'Growing and developing',
+  evergreen: 'Mature and well-tended',
+};
+
+const iconClass = sizeClasses[size];
+---
+
+<span
+  class:list={[
+    'inline-flex items-center gap-1.5',
+    `growth-${status}`,
+  ]}
+  title={descriptions[status]}
+>
+  {status === 'seedling' && (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class={iconClass}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M7 20h10"/>
+      <path d="M12 20v-6"/>
+      <path d="M9 10a3 3 0 0 1 6 0"/>
+      <path d="M12 10V7"/>
+      <path d="M9 7a3 3 0 0 1 6 0"/>
+    </svg>
+  )}
+
+  {status === 'budding' && (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class={iconClass}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M7 20h10"/>
+      <path d="M12 20v-8"/>
+      <path d="M12 12c-2-2-4-2.5-4-5a4 4 0 0 1 8 0c0 2.5-2 3-4 5"/>
+      <path d="M10 8.5c-1.5 0-2.5-1-2.5-2.5"/>
+      <path d="M14 8.5c1.5 0 2.5-1 2.5-2.5"/>
+    </svg>
+  )}
+
+  {status === 'evergreen' && (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class={iconClass}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M12 22v-7"/>
+      <path d="M9 22h6"/>
+      <path d="M12 15l-4-4 2-1-3-3 3-1-2-3h8l-2 3 3 1-3 3 2 1z"/>
+    </svg>
+  )}
+
+  {showLabel && (
+    <span class="text-sm font-medium">{labels[status]}</span>
+  )}
+</span>

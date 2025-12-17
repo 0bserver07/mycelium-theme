@@ -1,0 +1,127 @@
+---
+/**
+ * Header Component
+ *
+ * Site navigation with:
+ * - Site title/logo
+ * - Navigation links
+ * - Theme toggle
+ * - Mobile menu
+ */
+
+import { siteConfig } from '../config';
+import ThemeToggle from './ThemeToggle.astro';
+
+const currentPath = Astro.url.pathname;
+
+function isActive(url: string): boolean {
+  if (url === '/') {
+    return currentPath === '/';
+  }
+  return currentPath.startsWith(url);
+}
+---
+
+<header class="sticky top-0 z-40 w-full backdrop-blur-sm bg-primary-50/80 dark:bg-primary-950/80 border-b border-primary-200 dark:border-primary-800">
+  <nav class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+    <!-- Logo / Site Name -->
+    <a
+      href="/"
+      class="flex items-center gap-2 text-lg font-semibold text-primary-900 dark:text-primary-100 hover:text-accent-600 dark:hover:text-accent-400 transition-colors"
+    >
+      <!-- Mycelium icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M12 3v6m0 6v6"/>
+        <path d="M3 12h6m6 0h6"/>
+        <path d="M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24"/>
+        <path d="M18.36 5.64l-4.24 4.24m-4.24 4.24l-4.24 4.24"/>
+      </svg>
+      <span class="hidden sm:inline">{siteConfig.name}</span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <div class="hidden md:flex items-center gap-6">
+      {siteConfig.navigation.items.map((item) => (
+        <a
+          href={item.url}
+          class:list={[
+            'text-sm font-medium transition-colors',
+            isActive(item.url)
+              ? 'text-accent-600 dark:text-accent-400'
+              : 'text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-100',
+          ]}
+        >
+          {item.title}
+        </a>
+      ))}
+
+      <div class="h-5 w-px bg-primary-300 dark:bg-primary-700" />
+
+      <ThemeToggle />
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button
+      id="mobile-menu-button"
+      class="md:hidden p-2 text-primary-600 dark:text-primary-400 hover:text-primary-900 dark:hover:text-primary-100"
+      aria-label="Toggle menu"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+  </nav>
+
+  <!-- Mobile Navigation -->
+  <div
+    id="mobile-menu"
+    class="md:hidden hidden border-t border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-950"
+  >
+    <div class="px-4 py-4 space-y-2">
+      {siteConfig.navigation.items.map((item) => (
+        <a
+          href={item.url}
+          class:list={[
+            'block py-2 px-3 rounded-lg text-sm font-medium transition-colors',
+            isActive(item.url)
+              ? 'bg-accent-100 dark:bg-accent-900/30 text-accent-700 dark:text-accent-300'
+              : 'text-primary-600 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-900',
+          ]}
+        >
+          {item.title}
+        </a>
+      ))}
+
+      <div class="pt-2 border-t border-primary-200 dark:border-primary-800">
+        <div class="flex items-center justify-between py-2 px-3">
+          <span class="text-sm text-primary-600 dark:text-primary-400">Theme</span>
+          <ThemeToggle />
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  function initMobileMenu() {
+    const button = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
+
+    if (button && menu) {
+      button.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!button.contains(e.target as Node) && !menu.contains(e.target as Node)) {
+          menu.classList.add('hidden');
+        }
+      });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', initMobileMenu);
+  document.addEventListener('astro:page-load', initMobileMenu);
+</script>

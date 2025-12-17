@@ -1,0 +1,273 @@
+/**
+ * Mycelium Global Styles
+ *
+ * This file contains base styles and CSS custom properties for theming.
+ */
+
+/* Import fonts - must come before @tailwind directives */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   THEME: Forest (Default)
+   Deep greens inspired by the mycelium network in forests
+   ============================================================================ */
+
+:root {
+  /* Primary - Forest greens */
+  --color-primary-50: 240 253 244;   /* #f0fdf4 */
+  --color-primary-100: 220 252 231;  /* #dcfce7 */
+  --color-primary-200: 187 247 208;  /* #bbf7d0 */
+  --color-primary-300: 134 239 172;  /* #86efac */
+  --color-primary-400: 74 222 128;   /* #4ade80 */
+  --color-primary-500: 34 197 94;    /* #22c55e */
+  --color-primary-600: 22 163 74;    /* #16a34a */
+  --color-primary-700: 21 128 61;    /* #15803d */
+  --color-primary-800: 22 101 52;    /* #166534 */
+  --color-primary-900: 20 83 45;     /* #14532d */
+  --color-primary-950: 5 46 22;      /* #052e16 */
+
+  /* Accent - Warm amber (like sunlight through leaves) */
+  --color-accent-50: 255 251 235;    /* #fffbeb */
+  --color-accent-100: 254 243 199;   /* #fef3c7 */
+  --color-accent-200: 253 230 138;   /* #fde68a */
+  --color-accent-300: 252 211 77;    /* #fcd34d */
+  --color-accent-400: 251 191 36;    /* #fbbf24 */
+  --color-accent-500: 245 158 11;    /* #f59e0b */
+  --color-accent-600: 217 119 6;     /* #d97706 */
+  --color-accent-700: 180 83 9;      /* #b45309 */
+  --color-accent-800: 146 64 14;     /* #92400e */
+  --color-accent-900: 120 53 15;     /* #78350f */
+  --color-accent-950: 69 26 3;       /* #451a03 */
+
+  /* Background for light mode */
+  --bg-primary: var(--color-primary-50);
+  --bg-secondary: var(--color-primary-100);
+  --text-primary: var(--color-primary-900);
+  --text-secondary: var(--color-primary-700);
+}
+
+/* Dark mode colors */
+.dark {
+  --bg-primary: var(--color-primary-950);
+  --bg-secondary: var(--color-primary-900);
+  --text-primary: var(--color-primary-100);
+  --text-secondary: var(--color-primary-300);
+}
+
+/* ============================================================================
+   BASE STYLES
+   ============================================================================ */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-primary-50 text-primary-900 dark:bg-primary-950 dark:text-primary-100;
+    @apply font-sans antialiased;
+    @apply transition-colors duration-200;
+  }
+
+  /* Focus styles for accessibility */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent-500;
+  }
+
+  /* Selection highlight */
+  ::selection {
+    @apply bg-accent-200 dark:bg-accent-800;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-primary-100 dark:bg-primary-900;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary-300 dark:bg-primary-700 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary-400 dark:bg-primary-600;
+  }
+}
+
+/* ============================================================================
+   COMPONENT STYLES
+   ============================================================================ */
+
+@layer components {
+  /* Wikilinks (internal links) */
+  .wikilink {
+    @apply text-accent-600 dark:text-accent-400;
+    @apply underline decoration-dashed decoration-1 underline-offset-2;
+    @apply hover:decoration-solid hover:text-accent-700 dark:hover:text-accent-300;
+    @apply transition-colors duration-150;
+  }
+
+  /* Growth status indicators */
+  .growth-seedling {
+    @apply text-green-500;
+  }
+
+  .growth-budding {
+    @apply text-amber-500;
+  }
+
+  .growth-evergreen {
+    @apply text-emerald-600 dark:text-emerald-400;
+  }
+
+  /* Callout blocks */
+  .callout {
+    @apply p-4 rounded-lg border-l-4 my-4;
+  }
+
+  .callout-note {
+    @apply bg-blue-50 border-blue-500 dark:bg-blue-950/50 dark:border-blue-400;
+  }
+
+  .callout-tip {
+    @apply bg-green-50 border-green-500 dark:bg-green-950/50 dark:border-green-400;
+  }
+
+  .callout-warning {
+    @apply bg-amber-50 border-amber-500 dark:bg-amber-950/50 dark:border-amber-400;
+  }
+
+  .callout-danger {
+    @apply bg-red-50 border-red-500 dark:bg-red-950/50 dark:border-red-400;
+  }
+
+  .callout-info {
+    @apply bg-purple-50 border-purple-500 dark:bg-purple-950/50 dark:border-purple-400;
+  }
+
+  /* Card styles */
+  .card {
+    @apply bg-white dark:bg-primary-900;
+    @apply border border-primary-200 dark:border-primary-800;
+    @apply rounded-xl shadow-sm;
+    @apply transition-shadow duration-200;
+  }
+
+  .card:hover {
+    @apply shadow-md;
+  }
+}
+
+/* ============================================================================
+   PROSE OVERRIDES (for content)
+   ============================================================================ */
+
+@layer utilities {
+  .prose-mycelium {
+    @apply prose dark:prose-invert;
+    @apply max-w-none;
+  }
+
+  /* Code blocks */
+  .prose-mycelium pre {
+    @apply bg-primary-900 dark:bg-primary-950;
+    @apply border border-primary-800 dark:border-primary-700;
+    @apply rounded-lg;
+  }
+
+  .prose-mycelium code {
+    @apply text-accent-600 dark:text-accent-400;
+    @apply bg-primary-100 dark:bg-primary-800;
+    @apply px-1.5 py-0.5 rounded;
+    @apply text-sm font-mono;
+  }
+
+  .prose-mycelium pre code {
+    @apply bg-transparent p-0;
+    @apply text-primary-100;
+  }
+
+  /* Links in prose */
+  .prose-mycelium a {
+    @apply text-accent-600 dark:text-accent-400;
+    @apply no-underline hover:underline;
+  }
+
+  /* Headings */
+  .prose-mycelium h1,
+  .prose-mycelium h2,
+  .prose-mycelium h3,
+  .prose-mycelium h4 {
+    @apply text-primary-900 dark:text-primary-100;
+    @apply font-semibold;
+  }
+
+  .prose-mycelium h2 {
+    @apply border-b border-primary-200 dark:border-primary-800 pb-2;
+  }
+
+  /* Blockquotes */
+  .prose-mycelium blockquote {
+    @apply border-l-4 border-accent-400 dark:border-accent-600;
+    @apply italic text-primary-700 dark:text-primary-300;
+  }
+}
+
+/* ============================================================================
+   ANIMATIONS
+   ============================================================================ */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.2s ease-out;
+}

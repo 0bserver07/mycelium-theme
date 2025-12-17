@@ -1,0 +1,31 @@
+---
+/**
+ * Tags Component
+ *
+ * Display a list of tags with links to tag pages
+ */
+
+export interface Props {
+  tags: string[];
+  linked?: boolean;
+}
+
+const { tags, linked = true } = Astro.props;
+---
+
+<div class="flex flex-wrap gap-2">
+  {tags.map((tag) => (
+    linked ? (
+      <a
+        href={`/posts/tag/${tag}/`}
+        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-accent-100 text-accent-800 dark:bg-accent-900/30 dark:text-accent-300 hover:bg-accent-200 dark:hover:bg-accent-900/50 transition-colors"
+      >
+        #{tag}
+      </a>
+    ) : (
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-accent-100 text-accent-800 dark:bg-accent-900/30 dark:text-accent-300">
+        #{tag}
+      </span>
+    )
+  ))}
+</div>

@@ -1,0 +1,63 @@
+---
+/**
+ * PostCard Component
+ *
+ * Card display for post previews with:
+ * - Title
+ * - Description
+ * - Growth status
+ * - Dates
+ * - Tags
+ */
+
+import type { Post } from '../types';
+import GrowthIndicator from './GrowthIndicator.astro';
+import Tags from './Tags.astro';
+import { siteConfig } from '../config';
+
+export interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { title, description, growth, planted, tags } = post.data;
+
+const plantedDate = planted.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+
+<article class="card p-5 hover:shadow-lg transition-all duration-200 group">
+  <a href={`/posts/${post.id}/`} class="block">
+    <!-- Header with growth indicator and date -->
+    <div class="flex items-center justify-between mb-3">
+      {siteConfig.garden.showGrowthStatus && (
+        <GrowthIndicator status={growth} size="sm" />
+      )}
+      <time class="text-xs text-primary-500 dark:text-primary-500">
+        {plantedDate}
+      </time>
+    </div>
+
+    <!-- Title -->
+    <h3 class="text-lg font-semibold text-primary-900 dark:text-primary-100 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors mb-2">
+      {title}
+    </h3>
+
+    <!-- Description -->
+    {description && (
+      <p class="text-sm text-primary-600 dark:text-primary-400 line-clamp-2 mb-3">
+        {description}
+      </p>
+    )}
+  </a>
+
+  <!-- Tags -->
+  {siteConfig.posts.showTags && tags && tags.length > 0 && (
+    <div class="mt-3 pt-3 border-t border-primary-100 dark:border-primary-800">
+      <Tags tags={tags.slice(0, 3)} />
+    </div>
+  )}
+</article>

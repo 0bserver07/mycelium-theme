@@ -1,0 +1,153 @@
+---
+/**
+ * PostLayout - Layout for garden posts/notes
+ *
+ * Displays:
+ * - Post title and metadata
+ * - Growth status indicator
+ * - Tags
+ * - Table of contents (optional)
+ * - Content
+ * - Local graph
+ * - Backlinks (linked mentions)
+ */
+
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import GrowthIndicator from '../components/GrowthIndicator.astro';
+import Tags from '../components/Tags.astro';
+import LocalGraph from '../components/LocalGraph.astro';
+import LinkedMentions from '../components/LinkedMentions.astro';
+import { siteConfig } from '../config';
+import type { Post } from '../types';
+
+export interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { title, description, growth, planted, lastTended, tags, image, imageAlt } = post.data;
+
+// Format dates
+const plantedDate = planted.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const tendedDate = lastTended?.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+// Calculate reading time (rough estimate)
+const content = post.body || '';
+const words = content.split(/\s+/).length;
+const readingTime = Math.ceil(words / 200);
+---
+
+<BaseLayout title={title} description={description} image={image}>
+  <Header slot="header" />
+
+  <div class="max-w-5xl mx-auto px-4 py-8 sm:py-12">
+    <div class="lg:grid lg:grid-cols-[1fr,280px] lg:gap-8">
+      <!-- Main Content -->
+      <article>
+        <!-- Post Header -->
+        <header class="mb-8">
+          <!-- Growth indicator and dates -->
+          <div class="flex flex-wrap items-center gap-4 text-sm text-primary-600 dark:text-primary-400 mb-4">
+            {siteConfig.garden.showGrowthStatus && (
+              <GrowthIndicator status={growth} showLabel />
+            )}
+
+            {siteConfig.garden.showPlantedDate && (
+              <span class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2v6m0 0a4 4 0 100 8 4 4 0 000-8z"/>
+                  <path d="M12 22v-6"/>
+                </svg>
+                Planted {plantedDate}
+              </span>
+            )}
+
+            {siteConfig.garden.showLastTended && tendedDate && (
+              <span class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 8v4l3 3"/>
+                  <circle cx="12" cy="12" r="10"/>
+                </svg>
+                Tended {tendedDate}
+              </span>
+            )}
+
+            {siteConfig.posts.showReadingTime && (
+              <span class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                </svg>
+                {readingTime} min read
+              </span>
+            )}
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-3xl sm:text-4xl font-bold text-primary-900 dark:text-primary-100 mb-4">
+            {title}
+          </h1>
+
+          <!-- Description -->
+          {description && (
+            <p class="text-lg text-primary-600 dark:text-primary-400 mb-4">
+              {description}
+            </p>
+          )}
+
+          <!-- Tags -->
+          {siteConfig.posts.showTags && tags && tags.length > 0 && (
+            <Tags tags={tags} />
+          )}
+        </header>
+
+        <!-- Cover Image -->
+        {image && (
+          <figure class="mb-8 -mx-4 sm:mx-0">
+            <img
+              src={image}
+              alt={imageAlt || title}
+              class="w-full rounded-lg sm:rounded-xl"
+            />
+          </figure>
+        )}
+
+        <!-- Post Content -->
+        <div class="prose-mycelium">
+          <slot />
+        </div>
+
+        <!-- Backlinks section -->
+        <LinkedMentions currentSlug={post.id} />
+      </article>
+
+      <!-- Sidebar -->
+      <aside class="hidden lg:block">
+        <div class="sticky top-24 space-y-6">
+          <!-- Local Graph -->
+          {siteConfig.features.localGraph && (
+            <div>
+              <h3 class="text-sm font-medium text-primary-600 dark:text-primary-400 mb-3">
+                Connections
+              </h3>
+              <LocalGraph currentSlug={post.id} />
+            </div>
+          )}
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <Footer slot="footer" />
+</BaseLayout>

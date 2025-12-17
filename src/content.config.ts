@@ -1,0 +1,99 @@
+/**
+ * Mycelium Content Collections Configuration
+ *
+ * Defines the schema for all content types in the digital garden.
+ */
+
+import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
+
+// Growth status enum for digital garden content
+const growthStatusEnum = z.enum(['seedling', 'budding', 'evergreen']).default('seedling');
+
+// Posts Collection - Main blog/garden content
+const postsCollection = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/posts' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    // Garden-specific fields
+    growth: growthStatusEnum,
+    planted: z.coerce.date(),                    // When first created
+    lastTended: z.coerce.date().optional(),      // Last updated
+    // Standard blog fields
+    tags: z.array(z.string()).optional(),
+    draft: z.boolean().optional().default(false),
+    // Media
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+    // SEO
+    noIndex: z.boolean().optional(),
+  }),
+});
+
+// Pages Collection - Static pages (About, Contact, etc.)
+const pagesCollection = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/pages' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    lastModified: z.coerce.date().optional(),
+    draft: z.boolean().optional().default(false),
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+    noIndex: z.boolean().optional(),
+  }),
+});
+
+// Projects Collection - Portfolio/showcase
+const projectsCollection = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    // Project-specific fields
+    status: z.enum(['active', 'completed', 'archived', 'planned']).default('active'),
+    featured: z.boolean().optional().default(false),
+    repositoryUrl: z.string().url().optional(),
+    projectUrl: z.string().url().optional(),
+    // Dates
+    startDate: z.coerce.date().optional(),
+    endDate: z.coerce.date().optional(),
+    // Categorization
+    categories: z.array(z.string()).optional(),
+    technologies: z.array(z.string()).optional(),
+    // Media
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+    // Publishing
+    draft: z.boolean().optional().default(false),
+    noIndex: z.boolean().optional(),
+  }),
+});
+
+// Documentation Collection - Technical docs
+const docsCollection = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/docs' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    // Doc-specific fields
+    category: z.string().optional(),
+    order: z.number().optional().default(0),      // For sorting within category
+    version: z.string().optional(),
+    // Dates
+    lastModified: z.coerce.date().optional(),
+    // Display options
+    showToc: z.boolean().optional().default(true),
+    // Publishing
+    draft: z.boolean().optional().default(false),
+    noIndex: z.boolean().optional(),
+  }),
+});
+
+export const collections = {
+  posts: postsCollection,
+  pages: pagesCollection,
+  projects: projectsCollection,
+  docs: docsCollection,
+};

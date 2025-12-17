@@ -1,0 +1,124 @@
+---
+/**
+ * BaseLayout - Root layout for all pages
+ *
+ * Handles:
+ * - HTML document structure
+ * - SEO meta tags
+ * - Dark mode initialization
+ * - Global styles
+ * - Command palette
+ */
+
+import { siteConfig } from '../config';
+import CommandPalette from '../components/CommandPalette.astro';
+import '../styles/global.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noIndex?: boolean;
+}
+
+const {
+  title,
+  description = siteConfig.description,
+  image,
+  noIndex = false,
+} = Astro.props;
+
+const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const ogImage = image ? new URL(image, Astro.site) : undefined;
+---
+
+<!doctype html>
+<html lang={siteConfig.language}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
+    <title>{pageTitle}</title>
+    <meta name="title" content={pageTitle} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- RSS Feed -->
+    {siteConfig.features.rss && (
+      <link
+        rel="alternate"
+        type="application/rss+xml"
+        title={siteConfig.name}
+        href="/feed.xml"
+      />
+    )}
+
+    <!-- Robots -->
+    {noIndex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalUrl} />
+    <meta property="twitter:title" content={pageTitle} />
+    <meta property="twitter:description" content={description} />
+    {ogImage && <meta property="twitter:image" content={ogImage} />}
+
+    <!-- Dark mode initialization (prevent flash) -->
+    <script is:inline>
+      (function() {
+        const theme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (theme === 'dark' || (!theme && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <slot name="header" />
+
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <slot name="footer" />
+
+    <!-- Command Palette -->
+    <CommandPalette />
+
+    <!-- Theme toggle script -->
+    <script>
+      // Theme toggle functionality
+      function initThemeToggle() {
+        const toggleButtons = document.querySelectorAll('[data-theme-toggle]');
+
+        toggleButtons.forEach((button) => {
+          button.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            // Dispatch event for components that need to react to theme changes
+            window.dispatchEvent(new CustomEvent('themechange', { detail: { dark: isDark } }));
+          });
+        });
+      }
+
+      // Initialize on load and after page transitions
+      document.addEventListener('DOMContentLoaded', initThemeToggle);
+      document.addEventListener('astro:page-load', initThemeToggle);
+    </script>
+  </body>
+</html>
