@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
 import PostCard from '../../../components/PostCard.astro';
 
 export async function getStaticPaths() {
@@ -23,7 +25,8 @@ const { tag, posts } = Astro.props;
 ---
 
 <BaseLayout title={`Posts tagged "${tag}"`} description={`All posts tagged with ${tag}`}>
-  <main class="container mx-auto px-4 py-12 max-w-4xl">
+  <Header slot="header" />
+  <div class="container mx-auto px-4 py-12 max-w-4xl">
     <header class="mb-12">
       <a href="/posts" class="text-primary-600 dark:text-primary-400 hover:underline mb-4 inline-block">
         ← Back to all posts
@@ -41,5 +44,6 @@ const { tag, posts } = Astro.props;
         <PostCard post={post} />
       ))}
     </div>
-  </main>
+  </div>
+  <Footer slot="footer" />
 </BaseLayout>

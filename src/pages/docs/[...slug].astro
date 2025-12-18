@@ -1,6 +1,8 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
 
 export async function getStaticPaths() {
   const docs = await getCollection('docs');
@@ -25,7 +27,8 @@ const nextDoc = currentIndex < sameCategoryDocs.length - 1 ? sameCategoryDocs[cu
 ---
 
 <BaseLayout title={doc.data.title} description={doc.data.description}>
-  <main class="container mx-auto px-4 py-12 max-w-4xl">
+  <Header slot="header" />
+  <div class="container mx-auto px-4 py-12 max-w-4xl">
     <article>
       <header class="mb-8">
         <a href="/docs" class="text-primary-600 dark:text-primary-400 hover:underline mb-4 inline-block">
@@ -92,5 +95,6 @@ const nextDoc = currentIndex < sameCategoryDocs.length - 1 ? sameCategoryDocs[cu
         </nav>
       )}
     </article>
-  </main>
+  </div>
+  <Footer slot="footer" />
 </BaseLayout>

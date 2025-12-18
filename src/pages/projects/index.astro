@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
 
 const projects = await getCollection('projects');
 const featuredProjects = projects.filter(p => p.data.featured);
@@ -8,7 +10,8 @@ const otherProjects = projects.filter(p => !p.data.featured);
 ---
 
 <BaseLayout title="Projects" description="A showcase of my projects and work">
-  <main class="container mx-auto px-4 py-12 max-w-6xl">
+  <Header slot="header" />
+  <div class="container mx-auto px-4 py-12 max-w-6xl">
     <header class="mb-12 text-center">
       <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Projects</h1>
       <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -82,5 +85,6 @@ const otherProjects = projects.filter(p => !p.data.featured);
         <p class="text-gray-500 dark:text-gray-400">No projects yet. Start creating!</p>
       </div>
     )}
-  </main>
+  </div>
+  <Footer slot="footer" />
 </BaseLayout>
