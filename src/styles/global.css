@@ -17,50 +17,51 @@
 @tailwind utilities;
 
 /* ============================================================================
-   THEME: Forest (Default)
-   Deep greens inspired by the mycelium network in forests
+   THEME: Sage (Default)
+   Therapeutic, calming sage greens - gentle on the eyes
+   Based on color therapy principles for relaxation and focus
    ============================================================================ */
 
 :root {
-  /* Primary - Forest greens */
-  --color-primary-50: 240 253 244;   /* #f0fdf4 */
-  --color-primary-100: 220 252 231;  /* #dcfce7 */
-  --color-primary-200: 187 247 208;  /* #bbf7d0 */
-  --color-primary-300: 134 239 172;  /* #86efac */
-  --color-primary-400: 74 222 128;   /* #4ade80 */
-  --color-primary-500: 34 197 94;    /* #22c55e */
-  --color-primary-600: 22 163 74;    /* #16a34a */
-  --color-primary-700: 21 128 61;    /* #15803d */
-  --color-primary-800: 22 101 52;    /* #166534 */
-  --color-primary-900: 20 83 45;     /* #14532d */
-  --color-primary-950: 5 46 22;      /* #052e16 */
+  /* Primary - Sage greens (muted, therapeutic tones) */
+  --color-primary-50: 247 250 247;   /* #f7faf7 - barely there green */
+  --color-primary-100: 236 243 236;  /* #ecf3ec - soft sage mist */
+  --color-primary-200: 214 228 214;  /* #d6e4d6 - light sage */
+  --color-primary-300: 181 204 181;  /* #b5ccb5 - gentle sage */
+  --color-primary-400: 143 176 143;  /* #8fb08f - sage */
+  --color-primary-500: 111 148 111;  /* #6f946f - balanced sage */
+  --color-primary-600: 88 124 88;    /* #587c58 - deep sage */
+  --color-primary-700: 71 100 71;    /* #476447 - forest sage */
+  --color-primary-800: 56 79 56;     /* #384f38 - dark sage */
+  --color-primary-900: 44 62 44;     /* #2c3e2c - deep forest */
+  --color-primary-950: 26 38 26;     /* #1a261a - night forest */
 
-  /* Accent - Warm amber (like sunlight through leaves) */
-  --color-accent-50: 255 251 235;    /* #fffbeb */
-  --color-accent-100: 254 243 199;   /* #fef3c7 */
-  --color-accent-200: 253 230 138;   /* #fde68a */
-  --color-accent-300: 252 211 77;    /* #fcd34d */
-  --color-accent-400: 251 191 36;    /* #fbbf24 */
-  --color-accent-500: 245 158 11;    /* #f59e0b */
-  --color-accent-600: 217 119 6;     /* #d97706 */
-  --color-accent-700: 180 83 9;      /* #b45309 */
-  --color-accent-800: 146 64 14;     /* #92400e */
-  --color-accent-900: 120 53 15;     /* #78350f */
-  --color-accent-950: 69 26 3;       /* #451a03 */
+  /* Accent - Warm terracotta (grounding, earthy) */
+  --color-accent-50: 253 250 247;    /* #fdfaf7 */
+  --color-accent-100: 250 241 235;   /* #faf1eb */
+  --color-accent-200: 245 224 209;   /* #f5e0d1 */
+  --color-accent-300: 235 198 171;   /* #ebc6ab */
+  --color-accent-400: 217 166 130;   /* #d9a682 */
+  --color-accent-500: 194 139 97;    /* #c28b61 */
+  --color-accent-600: 166 112 74;    /* #a6704a */
+  --color-accent-700: 138 90 60;     /* #8a5a3c */
+  --color-accent-800: 112 74 51;     /* #704a33 */
+  --color-accent-900: 92 62 44;      /* #5c3e2c */
+  --color-accent-950: 51 33 23;      /* #332117 */
 
-  /* Background for light mode */
-  --bg-primary: var(--color-primary-50);
-  --bg-secondary: var(--color-primary-100);
+  /* Background for light mode - warm paper tones */
+  --bg-primary: 252 251 249;         /* #fcfbf9 - warm white */
+  --bg-secondary: 247 246 243;       /* #f7f6f3 - light parchment */
   --text-primary: var(--color-primary-900);
   --text-secondary: var(--color-primary-700);
 }
 
-/* Dark mode colors */
+/* Dark mode colors - cozy, low contrast for night reading */
 .dark {
-  --bg-primary: var(--color-primary-950);
-  --bg-secondary: var(--color-primary-900);
-  --text-primary: var(--color-primary-100);
-  --text-secondary: var(--color-primary-300);
+  --bg-primary: 24 28 24;            /* #181c18 - soft black with green */
+  --bg-secondary: 32 38 32;          /* #202620 - elevated dark */
+  --text-primary: 226 232 226;       /* #e2e8e2 - soft white */
+  --text-secondary: 176 192 176;     /* #b0c0b0 - muted sage */
 }
 
 /* ============================================================================

@@ -1,0 +1,96 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const docs = await getCollection('docs');
+  return docs.map(doc => ({
+    params: { slug: doc.id },
+    props: { doc }
+  }));
+}
+
+const { doc } = Astro.props;
+const { Content, headings } = await render(doc);
+
+// Get all docs for navigation
+const allDocs = await getCollection('docs');
+const sameCategoryDocs = allDocs
+  .filter(d => d.data.category === doc.data.category)
+  .sort((a, b) => (a.data.order || 999) - (b.data.order || 999));
+
+const currentIndex = sameCategoryDocs.findIndex(d => d.id === doc.id);
+const prevDoc = currentIndex > 0 ? sameCategoryDocs[currentIndex - 1] : null;
+const nextDoc = currentIndex < sameCategoryDocs.length - 1 ? sameCategoryDocs[currentIndex + 1] : null;
+---
+
+<BaseLayout title={doc.data.title} description={doc.data.description}>
+  <main class="container mx-auto px-4 py-12 max-w-4xl">
+    <article>
+      <header class="mb-8">
+        <a href="/docs" class="text-primary-600 dark:text-primary-400 hover:underline mb-4 inline-block">
+          ← Back to docs
+        </a>
+
+        {doc.data.category && (
+          <p class="text-sm text-primary-600 dark:text-primary-400 font-medium uppercase tracking-wide mb-2">
+            {doc.data.category}
+          </p>
+        )}
+
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100">
+          {doc.data.title}
+        </h1>
+
+        {doc.data.description && (
+          <p class="text-xl text-gray-600 dark:text-gray-400 mt-4">
+            {doc.data.description}
+          </p>
+        )}
+      </header>
+
+      {headings.length > 0 && (
+        <nav class="mb-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <h2 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">On this page</h2>
+          <ul class="space-y-1">
+            {headings.filter(h => h.depth <= 3).map(heading => (
+              <li style={`padding-left: ${(heading.depth - 2) * 12}px`}>
+                <a
+                  href={`#${heading.slug}`}
+                  class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400"
+                >
+                  {heading.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
+
+      <div class="prose prose-lg dark:prose-invert max-w-none">
+        <Content />
+      </div>
+
+      {(prevDoc || nextDoc) && (
+        <nav class="flex justify-between mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+          {prevDoc ? (
+            <a href={`/docs/${prevDoc.id}`} class="group">
+              <span class="text-sm text-gray-500 dark:text-gray-400">Previous</span>
+              <p class="font-medium text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400">
+                ← {prevDoc.data.title}
+              </p>
+            </a>
+          ) : <div />}
+          {nextDoc ? (
+            <a href={`/docs/${nextDoc.id}`} class="group text-right">
+              <span class="text-sm text-gray-500 dark:text-gray-400">Next</span>
+              <p class="font-medium text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400">
+                {nextDoc.data.title} →
+              </p>
+            </a>
+          ) : <div />}
+        </nav>
+      )}
+    </article>
+  </main>
+</BaseLayout>
