@@ -20,6 +20,7 @@ import Tags from '../components/Tags.astro';
 import LocalGraph from '../components/LocalGraph.astro';
 import LinkedMentions from '../components/LinkedMentions.astro';
 import TableOfContents from '../components/TableOfContents.astro';
+import Giscus from '../components/Giscus.astro';
 import { siteConfig } from '../config';
 import type { Post } from '../types';
 
@@ -132,6 +133,9 @@ const readingTime = Math.ceil(words / 200);
 
         <!-- Backlinks section -->
         <LinkedMentions currentSlug={post.id} />
+
+        <!-- Comments -->
+        <Giscus />
       </article>
 
       <!-- Sidebar -->

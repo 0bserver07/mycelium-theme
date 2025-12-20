@@ -68,7 +68,8 @@ export interface MyceliumConfig {
 }
 
 export type ThemeName =
-  | 'forest'      // Deep greens - default mycelium theme
+  | 'sage'        // Therapeutic sage greens (default)
+  | 'forest'      // Deep greens
   | 'ocean'       // Blues
   | 'sunset'      // Warm oranges/reds
   | 'minimal'     // Grayscale
@@ -103,7 +104,7 @@ export const siteConfig: MyceliumConfig = {
   language: 'en',
 
   // Appearance
-  theme: 'forest',
+  theme: 'sage',
   fonts: {
     body: 'Inter',
     heading: 'Inter',

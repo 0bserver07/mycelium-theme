@@ -1,0 +1,86 @@
+---
+/**
+ * Giscus Comments Component
+ *
+ * Embeds Giscus comments powered by GitHub Discussions.
+ * Configure in src/config.ts under the 'comments' section.
+ *
+ * To set up Giscus:
+ * 1. Go to https://giscus.app
+ * 2. Enter your repository details
+ * 3. Copy the repo, repoId, category, and categoryId values
+ * 4. Add them to your config.ts
+ */
+
+import { siteConfig } from '../config';
+
+const comments = siteConfig.comments;
+const enabled = siteConfig.features.comments && comments;
+---
+
+{enabled && comments && (
+  <div class="giscus-container mt-12 pt-8 border-t border-primary-200 dark:border-primary-800">
+    <h2 class="text-xl font-semibold text-primary-900 dark:text-primary-100 mb-6">
+      Comments
+    </h2>
+    <div class="giscus"></div>
+  </div>
+)}
+
+<script define:vars={{ comments, enabled }}>
+  if (enabled && comments) {
+    // Determine theme based on current mode
+    const getGiscusTheme = () => {
+      return document.documentElement.classList.contains('dark')
+        ? 'dark'
+        : 'light';
+    };
+
+    // Create and load Giscus script
+    const loadGiscus = () => {
+      const container = document.querySelector('.giscus');
+      if (!container) return;
+
+      // Remove existing script if any
+      const existingScript = document.querySelector('script[src="https://giscus.app/client.js"]');
+      if (existingScript) existingScript.remove();
+
+      const script = document.createElement('script');
+      script.src = 'https://giscus.app/client.js';
+      script.setAttribute('data-repo', comments.repo);
+      script.setAttribute('data-repo-id', comments.repoId);
+      script.setAttribute('data-category', comments.category);
+      script.setAttribute('data-category-id', comments.categoryId);
+      script.setAttribute('data-mapping', 'pathname');
+      script.setAttribute('data-strict', '0');
+      script.setAttribute('data-reactions-enabled', '1');
+      script.setAttribute('data-emit-metadata', '0');
+      script.setAttribute('data-input-position', 'bottom');
+      script.setAttribute('data-theme', getGiscusTheme());
+      script.setAttribute('data-lang', 'en');
+      script.setAttribute('crossorigin', 'anonymous');
+      script.async = true;
+
+      container.appendChild(script);
+    };
+
+    // Load on DOMContentLoaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadGiscus);
+    } else {
+      loadGiscus();
+    }
+
+    // Update theme when dark mode changes
+    window.addEventListener('themechange', (e) => {
+      const iframe = document.querySelector('.giscus-frame');
+      if (iframe) {
+        const theme = e.detail.dark ? 'dark' : 'light';
+        iframe.contentWindow.postMessage(
+          { giscus: { setConfig: { theme } } },
+          'https://giscus.app'
+        );
+      }
+    });
+  }
+</script>
