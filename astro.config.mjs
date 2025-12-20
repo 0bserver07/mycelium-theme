@@ -17,6 +17,7 @@ import { remarkHighlight } from './src/utils/remark-highlight.ts';
 import { remarkEmbeds } from './src/utils/remark-embeds.ts';
 import { remarkMediaEmbeds } from './src/utils/remark-media-embeds.ts';
 import { remarkMermaid } from './src/utils/remark-mermaid.ts';
+import { remarkGallery } from './src/utils/remark-gallery.ts';
 
 // https://astro.build/config
 export default defineConfig({
@@ -35,6 +36,7 @@ export default defineConfig({
       remarkEmbeds,  // Must come before wikilinks
       remarkMediaEmbeds,  // YouTube/Twitter embeds
       remarkMermaid,  // Mermaid diagrams
+      remarkGallery,  // Image galleries
       remarkWikilinks,
       remarkCallouts,
       remarkHighlight,
