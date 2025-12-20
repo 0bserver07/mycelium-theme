@@ -9,6 +9,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import PostCard from '../../components/PostCard.astro';
+import Pagination from '../../components/Pagination.astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '../../config';
 
@@ -18,12 +19,17 @@ const allPosts = await getCollection('posts', ({ data }) => {
 });
 
 // Sort by planted date, newest first
-const posts = allPosts.sort(
+const allPostsSorted = allPosts.sort(
   (a, b) => b.data.planted.valueOf() - a.data.planted.valueOf()
 );
 
-// Get unique tags
-const allTags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort();
+// Paginate - show first page
+const postsPerPage = siteConfig.posts.postsPerPage;
+const totalPages = Math.ceil(allPostsSorted.length / postsPerPage);
+const posts = allPostsSorted.slice(0, postsPerPage);
+
+// Get unique tags from all posts
+const allTags = [...new Set(allPostsSorted.flatMap((post) => post.data.tags || []))].sort();
 ---
 
 <BaseLayout title="Garden" description="All notes in the digital garden">
@@ -57,7 +63,7 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort
 
     <!-- Posts Grid -->
     {posts.length > 0 ? (
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         {posts.map((post) => (
           <PostCard post={post} />
         ))}
@@ -68,6 +74,15 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags || []))].sort
           No notes have been planted yet. Start adding content to see them here!
         </p>
       </div>
+    )}
+
+    <!-- Pagination -->
+    {totalPages > 1 && (
+      <Pagination
+        currentPage={1}
+        totalPages={totalPages}
+        baseUrl="/posts/"
+      />
     )}
   </div>
 

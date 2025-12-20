@@ -11,6 +11,7 @@
 
 import { siteConfig } from '../config';
 import ThemeToggle from './ThemeToggle.astro';
+import ThemeSelector from './ThemeSelector.astro';
 
 const currentPath = Astro.url.pathname;
 
@@ -58,6 +59,7 @@ function isActive(url: string): boolean {
 
       <div class="h-5 w-px bg-primary-300 dark:bg-primary-700" />
 
+      <ThemeSelector />
       <ThemeToggle />
     </div>
 

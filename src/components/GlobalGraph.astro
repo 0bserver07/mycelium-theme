@@ -1,0 +1,315 @@
+---
+/**
+ * GlobalGraph Component
+ *
+ * Full-screen graph visualization showing all notes and their connections.
+ * Opens in a modal overlay.
+ */
+
+import { getCollection } from 'astro:content';
+
+// Get all posts for the graph
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+
+// Build graph data
+const nodes = posts.map(post => ({
+  id: post.id,
+  title: post.data.title,
+  growth: post.data.growth || 'seedling',
+  tags: post.data.tags || [],
+}));
+
+// Extract links from content
+const links: Array<{ source: string; target: string }> = [];
+
+for (const post of posts) {
+  const content = post.body || '';
+  // Match wikilinks: [[target]] or [[target|display]]
+  const wikiLinkRegex = /\[\[([^\]|#]+)(?:[|#][^\]]+)?\]\]/g;
+  let match;
+
+  while ((match = wikiLinkRegex.exec(content)) !== null) {
+    const target = match[1].toLowerCase().replace(/\s+/g, '-');
+    // Check if target exists
+    const targetExists = posts.some(p =>
+      p.id.toLowerCase() === target ||
+      p.data.title.toLowerCase().replace(/\s+/g, '-') === target
+    );
+
+    if (targetExists) {
+      links.push({
+        source: post.id,
+        target: target,
+      });
+    }
+  }
+}
+
+const graphData = { nodes, links };
+---
+
+<!-- Graph Toggle Button -->
+<button
+  id="global-graph-toggle"
+  class="fixed bottom-6 right-6 z-40 p-3 bg-primary-600 hover:bg-primary-700 text-white rounded-full shadow-lg transition-all hover:scale-105"
+  aria-label="Open graph view"
+  title="View all connections (G)"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="3"/>
+    <circle cx="4" cy="6" r="2"/>
+    <circle cx="20" cy="6" r="2"/>
+    <circle cx="4" cy="18" r="2"/>
+    <circle cx="20" cy="18" r="2"/>
+    <path d="M9.5 10.5L5.5 7.5"/>
+    <path d="M14.5 10.5L18.5 7.5"/>
+    <path d="M9.5 13.5L5.5 16.5"/>
+    <path d="M14.5 13.5L18.5 16.5"/>
+  </svg>
+</button>
+
+<!-- Graph Modal -->
+<div
+  id="global-graph-modal"
+  class="fixed inset-0 z-50 hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="graph-title"
+>
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" id="graph-backdrop"></div>
+
+  <!-- Modal Content -->
+  <div class="relative h-full flex flex-col">
+    <!-- Header -->
+    <header class="flex items-center justify-between px-6 py-4 bg-primary-900/90">
+      <h2 id="graph-title" class="text-xl font-semibold text-white">
+        Knowledge Graph
+      </h2>
+      <div class="flex items-center gap-4">
+        <span class="text-sm text-primary-300">
+          {nodes.length} notes · {links.length} connections
+        </span>
+        <button
+          id="graph-close"
+          class="p-2 text-primary-300 hover:text-white transition-colors"
+          aria-label="Close graph"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Graph Container -->
+    <div id="global-graph-container" class="flex-1 relative">
+      <!-- D3 will render here -->
+    </div>
+
+    <!-- Legend -->
+    <footer class="px-6 py-3 bg-primary-900/90 flex items-center gap-6 text-sm">
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-green-400"></span>
+        <span class="text-primary-300">Seedling</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+        <span class="text-primary-300">Budding</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+        <span class="text-primary-300">Evergreen</span>
+      </div>
+      <div class="ml-auto text-primary-400">
+        Drag to move · Scroll to zoom · Click to navigate
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script define:vars={{ graphData }}>
+  // D3.js for global graph
+  async function initGlobalGraph() {
+    const modal = document.getElementById('global-graph-modal');
+    const toggle = document.getElementById('global-graph-toggle');
+    const close = document.getElementById('graph-close');
+    const backdrop = document.getElementById('graph-backdrop');
+    const container = document.getElementById('global-graph-container');
+
+    if (!modal || !toggle || !container) return;
+
+    let simulation = null;
+    let isOpen = false;
+
+    // Open modal
+    function openGraph() {
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      isOpen = true;
+      renderGraph();
+    }
+
+    // Close modal
+    function closeGraph() {
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+      isOpen = false;
+      if (simulation) {
+        simulation.stop();
+      }
+    }
+
+    toggle.addEventListener('click', openGraph);
+    close?.addEventListener('click', closeGraph);
+    backdrop?.addEventListener('click', closeGraph);
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'g' && !e.ctrlKey && !e.metaKey && !isOpen) {
+        const activeElement = document.activeElement;
+        if (activeElement?.tagName !== 'INPUT' && activeElement?.tagName !== 'TEXTAREA') {
+          openGraph();
+        }
+      }
+      if (e.key === 'Escape' && isOpen) {
+        closeGraph();
+      }
+    });
+
+    async function renderGraph() {
+      // Dynamically import D3
+      const d3 = await import('https://cdn.jsdelivr.net/npm/d3@7/+esm');
+
+      // Clear previous
+      container.innerHTML = '';
+
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      // Create SVG
+      const svg = d3.select(container)
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('viewBox', [0, 0, width, height]);
+
+      // Add zoom behavior
+      const g = svg.append('g');
+
+      const zoom = d3.zoom()
+        .scaleExtent([0.2, 4])
+        .on('zoom', (event) => {
+          g.attr('transform', event.transform);
+        });
+
+      svg.call(zoom);
+
+      // Color based on growth status
+      function getColor(growth) {
+        switch(growth) {
+          case 'seedling': return '#4ade80';
+          case 'budding': return '#fbbf24';
+          case 'evergreen': return '#10b981';
+          default: return '#6b7280';
+        }
+      }
+
+      // Create force simulation
+      simulation = d3.forceSimulation(graphData.nodes)
+        .force('link', d3.forceLink(graphData.links).id(d => d.id).distance(100))
+        .force('charge', d3.forceManyBody().strength(-300))
+        .force('center', d3.forceCenter(width / 2, height / 2))
+        .force('collision', d3.forceCollide().radius(30));
+
+      // Draw links
+      const link = g.append('g')
+        .selectAll('line')
+        .data(graphData.links)
+        .join('line')
+        .attr('stroke', '#4b5563')
+        .attr('stroke-opacity', 0.6)
+        .attr('stroke-width', 1.5);
+
+      // Draw nodes
+      const node = g.append('g')
+        .selectAll('g')
+        .data(graphData.nodes)
+        .join('g')
+        .attr('cursor', 'pointer')
+        .call(d3.drag()
+          .on('start', dragstarted)
+          .on('drag', dragged)
+          .on('end', dragended));
+
+      // Node circles
+      node.append('circle')
+        .attr('r', 8)
+        .attr('fill', d => getColor(d.growth))
+        .attr('stroke', '#fff')
+        .attr('stroke-width', 2);
+
+      // Node labels
+      node.append('text')
+        .text(d => d.title)
+        .attr('x', 12)
+        .attr('y', 4)
+        .attr('fill', '#e5e7eb')
+        .attr('font-size', '12px')
+        .attr('font-family', 'system-ui, sans-serif');
+
+      // Click to navigate
+      node.on('click', (event, d) => {
+        window.location.href = `/posts/${d.id}/`;
+      });
+
+      // Hover effects
+      node.on('mouseenter', function() {
+        d3.select(this).select('circle')
+          .transition()
+          .duration(200)
+          .attr('r', 12);
+      }).on('mouseleave', function() {
+        d3.select(this).select('circle')
+          .transition()
+          .duration(200)
+          .attr('r', 8);
+      });
+
+      // Update positions on tick
+      simulation.on('tick', () => {
+        link
+          .attr('x1', d => d.source.x)
+          .attr('y1', d => d.source.y)
+          .attr('x2', d => d.target.x)
+          .attr('y2', d => d.target.y);
+
+        node.attr('transform', d => `translate(${d.x},${d.y})`);
+      });
+
+      // Drag functions
+      function dragstarted(event) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        event.subject.fx = event.subject.x;
+        event.subject.fy = event.subject.y;
+      }
+
+      function dragged(event) {
+        event.subject.fx = event.x;
+        event.subject.fy = event.y;
+      }
+
+      function dragended(event) {
+        if (!event.active) simulation.alphaTarget(0);
+        event.subject.fx = null;
+        event.subject.fy = null;
+      }
+
+      // Center on initial load
+      svg.call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(0.8));
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', initGlobalGraph);
+  document.addEventListener('astro:page-load', initGlobalGraph);
+</script>

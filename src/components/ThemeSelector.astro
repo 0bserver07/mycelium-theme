@@ -1,0 +1,131 @@
+---
+/**
+ * ThemeSelector Component
+ *
+ * Allows users to switch between color themes.
+ * Persists selection in localStorage.
+ */
+
+import { themes, themeNames, defaultTheme } from '../themes';
+---
+
+<div class="theme-selector relative">
+  <button
+    id="theme-selector-toggle"
+    class="flex items-center gap-2 px-3 py-2 text-sm rounded-lg bg-primary-100 dark:bg-primary-800 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors"
+    aria-label="Select color theme"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 2a10 10 0 0 1 0 20"/>
+    </svg>
+    <span id="current-theme-label">Theme</span>
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M6 9l6 6 6-6"/>
+    </svg>
+  </button>
+
+  <div
+    id="theme-selector-menu"
+    class="hidden absolute right-0 mt-2 w-48 py-2 bg-white dark:bg-primary-800 rounded-lg shadow-lg border border-primary-200 dark:border-primary-700 z-50"
+    role="menu"
+  >
+    {themeNames.map((name) => (
+      <button
+        class="theme-option w-full px-4 py-2 text-left text-sm hover:bg-primary-100 dark:hover:bg-primary-700 transition-colors flex items-center gap-3"
+        data-theme={name}
+        role="menuitem"
+      >
+        <span
+          class="w-4 h-4 rounded-full border-2 border-white shadow"
+          style={`background: rgb(${themes[name].colors.primary['500']})`}
+        ></span>
+        <span>{themes[name].label}</span>
+      </button>
+    ))}
+  </div>
+</div>
+
+<script define:vars={{ themes, defaultTheme }}>
+  function initThemeSelector() {
+    const toggle = document.getElementById('theme-selector-toggle');
+    const menu = document.getElementById('theme-selector-menu');
+    const label = document.getElementById('current-theme-label');
+    const options = document.querySelectorAll('.theme-option');
+
+    if (!toggle || !menu) return;
+
+    // Get current theme
+    const currentTheme = localStorage.getItem('colorTheme') || defaultTheme;
+    applyTheme(currentTheme);
+    updateLabel(currentTheme);
+
+    // Toggle menu
+    toggle.addEventListener('click', () => {
+      const isOpen = menu.classList.contains('hidden');
+      menu.classList.toggle('hidden');
+      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (!toggle.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.add('hidden');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Theme selection
+    options.forEach((option) => {
+      option.addEventListener('click', () => {
+        const themeName = option.dataset.theme;
+        applyTheme(themeName);
+        updateLabel(themeName);
+        localStorage.setItem('colorTheme', themeName);
+        menu.classList.add('hidden');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    function updateLabel(themeName) {
+      if (label && themes[themeName]) {
+        label.textContent = themes[themeName].label;
+      }
+    }
+
+    function applyTheme(themeName) {
+      const theme = themes[themeName];
+      if (!theme) return;
+
+      const root = document.documentElement;
+
+      // Apply primary colors
+      Object.entries(theme.colors.primary).forEach(([key, value]) => {
+        root.style.setProperty(`--color-primary-${key}`, value);
+      });
+
+      // Apply accent colors
+      Object.entries(theme.colors.accent).forEach(([key, value]) => {
+        root.style.setProperty(`--color-accent-${key}`, value);
+      });
+
+      // Apply background colors
+      root.style.setProperty('--bg-primary', theme.colors.bg.light);
+      root.style.setProperty('--bg-secondary', theme.colors.bg.light);
+
+      // Mark active option
+      options.forEach((opt) => {
+        if (opt.dataset.theme === themeName) {
+          opt.classList.add('bg-primary-100', 'dark:bg-primary-700');
+        } else {
+          opt.classList.remove('bg-primary-100', 'dark:bg-primary-700');
+        }
+      });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', initThemeSelector);
+  document.addEventListener('astro:page-load', initThemeSelector);
+</script>

@@ -19,14 +19,16 @@ import GrowthIndicator from '../components/GrowthIndicator.astro';
 import Tags from '../components/Tags.astro';
 import LocalGraph from '../components/LocalGraph.astro';
 import LinkedMentions from '../components/LinkedMentions.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 import { siteConfig } from '../config';
 import type { Post } from '../types';
 
 export interface Props {
   post: Post;
+  headings?: Array<{ depth: number; slug: string; text: string }>;
 }
 
-const { post } = Astro.props;
+const { post, headings = [] } = Astro.props;
 const { title, description, growth, planted, lastTended, tags, image, imageAlt } = post.data;
 
 // Format dates
@@ -135,6 +137,11 @@ const readingTime = Math.ceil(words / 200);
       <!-- Sidebar -->
       <aside class="hidden lg:block">
         <div class="sticky top-24 space-y-6">
+          <!-- Table of Contents -->
+          {siteConfig.features.tableOfContents && headings.length > 0 && (
+            <TableOfContents headings={headings} />
+          )}
+
           <!-- Local Graph -->
           {siteConfig.features.localGraph && (
             <div>
@@ -151,3 +158,72 @@ const readingTime = Math.ceil(words / 200);
 
   <Footer slot="footer" />
 </BaseLayout>
+
+<!-- Twitter Widget Script for embedded tweets -->
+<script>
+  // Load Twitter widget script if there are tweet embeds
+  document.addEventListener('DOMContentLoaded', () => {
+    const tweetEmbeds = document.querySelectorAll('.twitter-embed');
+    if (tweetEmbeds.length > 0) {
+      const script = document.createElement('script');
+      script.src = 'https://platform.twitter.com/widgets.js';
+      script.async = true;
+      script.charset = 'utf-8';
+      document.body.appendChild(script);
+    }
+  });
+</script>
+
+<!-- Mermaid diagram rendering -->
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const mermaidContainers = document.querySelectorAll('.mermaid');
+    if (mermaidContainers.length > 0) {
+      // @ts-ignore - Dynamic import
+      const mermaid = await import('https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs');
+
+      // Configure mermaid
+      mermaid.default.initialize({
+        startOnLoad: false,
+        theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default',
+        securityLevel: 'loose',
+        fontFamily: 'inherit',
+      });
+
+      // Render all mermaid diagrams
+      mermaid.default.run({
+        nodes: mermaidContainers,
+      });
+
+      // Re-render on theme change
+      window.addEventListener('themechange', (e: CustomEvent) => {
+        mermaid.default.initialize({
+          startOnLoad: false,
+          theme: e.detail.dark ? 'dark' : 'default',
+          securityLevel: 'loose',
+          fontFamily: 'inherit',
+        });
+
+        // Need to reset and re-render
+        mermaidContainers.forEach((container) => {
+          const svg = container.querySelector('svg');
+          if (svg) {
+            const original = container.getAttribute('data-original');
+            if (original) {
+              container.innerHTML = original;
+            }
+          }
+        });
+
+        mermaid.default.run({
+          nodes: mermaidContainers,
+        });
+      });
+
+      // Store original content for re-rendering
+      mermaidContainers.forEach((container) => {
+        container.setAttribute('data-original', container.innerHTML);
+      });
+    }
+  });
+</script>

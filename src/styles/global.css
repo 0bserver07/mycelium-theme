@@ -133,6 +133,24 @@
     @apply text-emerald-600 dark:text-emerald-400;
   }
 
+  /* Highlight (==text==) */
+  .highlight {
+    @apply bg-accent-200 dark:bg-accent-800/50 px-1 py-0.5 rounded;
+  }
+
+  /* Mermaid diagrams */
+  .mermaid-container {
+    @apply flex justify-center overflow-x-auto;
+  }
+
+  .mermaid {
+    @apply max-w-full;
+  }
+
+  .mermaid svg {
+    @apply max-w-full h-auto;
+  }
+
   /* Callout blocks */
   .callout {
     @apply p-4 rounded-lg border-l-4 my-4;

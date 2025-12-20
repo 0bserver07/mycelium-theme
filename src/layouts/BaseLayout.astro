@@ -12,6 +12,7 @@
 
 import { siteConfig } from '../config';
 import CommandPalette from '../components/CommandPalette.astro';
+import GlobalGraph from '../components/GlobalGraph.astro';
 import '../styles/global.css';
 
 export interface Props {
@@ -40,6 +41,9 @@ const ogImage = image ? new URL(image, Astro.site) : undefined;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- KaTeX CSS for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous" />
 
     <!-- Primary Meta Tags -->
     <title>{pageTitle}</title>
@@ -99,6 +103,9 @@ const ogImage = image ? new URL(image, Astro.site) : undefined;
 
     <!-- Command Palette -->
     <CommandPalette />
+
+    <!-- Global Graph -->
+    {siteConfig.features.graphView && <GlobalGraph />}
 
     <!-- Theme toggle script -->
     <script>

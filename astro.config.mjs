@@ -7,10 +7,16 @@ import sitemap from '@astrojs/sitemap';
 // Remark/Rehype plugins
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 // Custom remark plugins
 import { remarkWikilinks } from './src/utils/remark-wikilinks.ts';
 import { remarkCallouts } from './src/utils/remark-callouts.ts';
+import { remarkHighlight } from './src/utils/remark-highlight.ts';
+import { remarkEmbeds } from './src/utils/remark-embeds.ts';
+import { remarkMediaEmbeds } from './src/utils/remark-media-embeds.ts';
+import { remarkMermaid } from './src/utils/remark-mermaid.ts';
 
 // https://astro.build/config
 export default defineConfig({
@@ -26,12 +32,18 @@ export default defineConfig({
 
   markdown: {
     remarkPlugins: [
+      remarkEmbeds,  // Must come before wikilinks
+      remarkMediaEmbeds,  // YouTube/Twitter embeds
+      remarkMermaid,  // Mermaid diagrams
       remarkWikilinks,
       remarkCallouts,
+      remarkHighlight,
+      remarkMath,  // LaTeX math syntax
     ],
     rehypePlugins: [
       rehypeSlug,
       [rehypeAutolinkHeadings, { behavior: 'wrap' }],
+      rehypeKatex,  // Render math with KaTeX
     ],
     shikiConfig: {
       theme: 'github-dark',
