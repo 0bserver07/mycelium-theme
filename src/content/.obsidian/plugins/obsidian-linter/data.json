@@ -1,0 +1,49 @@
+{
+  "ruleConfigs": {
+    "YAML Timestamp": {
+      "enabled": true,
+      "date-created": true,
+      "date-created-key": "planted",
+      "date-modified": true,
+      "date-modified-key": "lastTended",
+      "format": "YYYY-MM-DD"
+    },
+    "YAML Title": {
+      "enabled": true,
+      "title-key": "title"
+    },
+    "Trailing spaces": {
+      "enabled": true
+    },
+    "Heading blank lines": {
+      "enabled": true,
+      "bottom": true,
+      "empty-line-after-yaml": true
+    },
+    "Consecutive blank lines": {
+      "enabled": true
+    },
+    "Empty Line Around Code Fences": {
+      "enabled": true
+    },
+    "Empty Line Around Tables": {
+      "enabled": true
+    },
+    "Paragraph blank lines": {
+      "enabled": true
+    }
+  },
+  "lintOnSave": true,
+  "displayChanged": true,
+  "foldersToIgnore": ["_templates"],
+  "linterLocale": "system-default",
+  "logLevel": "ERROR",
+  "lintCommands": [],
+  "customRegexes": [],
+  "commonStyles": {
+    "aliasArrayStyle": "single-line",
+    "tagArrayStyle": "single-line",
+    "minimumNumberOfDollarSignsToBeAMathBlock": 2,
+    "escapeCharacter": "\""
+  }
+}

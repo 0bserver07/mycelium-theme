@@ -1,0 +1,16 @@
+{
+  "app:go-back": [{"modifiers": ["Alt"], "key": "ArrowLeft"}],
+  "app:go-forward": [{"modifiers": ["Alt"], "key": "ArrowRight"}],
+  "editor:toggle-source": [{"modifiers": ["Mod"], "key": "e"}],
+  "editor:toggle-fold": [{"modifiers": ["Mod", "Shift"], "key": "."}],
+  "file-explorer:reveal-active-file": [{"modifiers": ["Mod", "Shift"], "key": "r"}],
+  "graph:open": [{"modifiers": ["Mod"], "key": "g"}],
+  "graph:open-local": [{"modifiers": ["Mod", "Shift"], "key": "g"}],
+  "quickadd:runQuickAdd": [{"modifiers": ["Mod"], "key": "q"}],
+  "templater-obsidian:insert-templater": [{"modifiers": ["Mod"], "key": "t"}],
+  "obsidian-git:commit": [{"modifiers": ["Mod", "Shift"], "key": "k"}],
+  "obsidian-git:push": [{"modifiers": ["Mod", "Shift"], "key": "p"}],
+  "obsidian-git:pull": [{"modifiers": ["Mod", "Shift"], "key": "l"}],
+  "workspace:toggle-pin": [{"modifiers": ["Mod", "Shift"], "key": "i"}],
+  "editor:open-link-in-new-leaf": [{"modifiers": ["Mod"], "key": "Enter"}]
+}
