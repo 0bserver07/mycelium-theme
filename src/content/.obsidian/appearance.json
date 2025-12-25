@@ -1,8 +1,10 @@
 {
-  "accentColor": "#6f946f",
-  "theme": "obsidian",
-  "baseFontSize": 16,
-  "textFontFamily": "",
-  "monospaceFontFamily": "",
-  "interfaceFontFamily": ""
+  "cssTheme": "Oxygen",
+  "showViewHeader": true,
+  "showRibbon": false,
+  "enabledCssSnippets": [
+    "astro-modular-styling"
+  ],
+  "theme": "system",
+  "accentColor": ""
 }
