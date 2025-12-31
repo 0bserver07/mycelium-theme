@@ -52,18 +52,23 @@ async function main() {
   const configPath = join(rootDir, 'src', 'config.ts');
   let config = readFileSync(configPath, 'utf-8');
 
-  config = config.replace(/site: ['"].*['"]/, `site: '${siteUrl}'`);
-  config = config.replace(/name: ['"].*['"]/, `name: '${siteName}'`);
-  config = config.replace(/gardener: ['"].*['"]/, `gardener: '${gardener}'`);
-  config = config.replace(/description: ['"].*['"]/, `description: '${description}'`);
+  // Escape quotes in user input
+  const escapeForJs = (str) => str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+
+  config = config.replace(/site: ['"].*['"]/, `site: '${escapeForJs(siteUrl)}'`);
+  config = config.replace(/name: ['"].*['"]/, `name: '${escapeForJs(siteName)}'`);
+  config = config.replace(/gardener: ['"].*['"]/, `gardener: '${escapeForJs(gardener)}'`);
+  config = config.replace(/description: ['"].*['"]/, `description: '${escapeForJs(description)}'`);
 
   // Update social links
   const socialLinks = [];
   if (github) {
-    socialLinks.push(`      { title: 'GitHub', url: '${github}', icon: 'github' }`);
+    const ghUrl = github.startsWith('http') ? github : `https://github.com/${github}`;
+    socialLinks.push(`      { title: 'GitHub', url: '${escapeForJs(ghUrl)}', icon: 'github' }`);
   }
   if (twitter) {
-    socialLinks.push(`      { title: 'Twitter', url: '${twitter}', icon: 'twitter' }`);
+    const twUrl = twitter.startsWith('http') ? twitter : `https://twitter.com/${twitter}`;
+    socialLinks.push(`      { title: 'Twitter', url: '${escapeForJs(twUrl)}', icon: 'twitter' }`);
   }
 
   if (socialLinks.length > 0) {
