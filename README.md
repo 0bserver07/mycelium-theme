@@ -10,18 +10,15 @@ Mycelium is named after the underground fungal network that connects trees in a 
 git clone https://github.com/0bserver07/mycelium-theme my-garden
 cd my-garden
 npm install
-npm run dev
+npm run setup    # Configure your site name, URL, git remote
+npm run dev      # Start dev server
 ```
 
-**Obsidian vault location:**
-```
-src/content/   <-- Open THIS folder in Obsidian (not the repo root!)
-```
+**Obsidian vault:** Open `src/content/` in Obsidian (not repo root!)
 
-The vault has 17 plugins pre-configured. After opening `src/content/` in Obsidian:
-1. Go to Settings → Community plugins
-2. Turn off Restricted mode
-3. Enable the plugins
+After opening in Obsidian:
+1. Settings → Community plugins → Turn off Restricted mode
+2. Plugins auto-enable
 
 ## How It Works
 
