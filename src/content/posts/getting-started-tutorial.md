@@ -5,7 +5,7 @@ growth: evergreen
 planted: 2025-12-09
 lastTended: 2025-12-16
 tags: [tutorial, beginner, getting-started]
-draft: false
+draft: true
 ---
 
 # Getting Started Tutorial
@@ -59,7 +59,7 @@ description: The beginning of my digital garden
 growth: seedling
 planted: 2025-12-16
 tags: [personal, learning]
-draft: false
+draft: true
 ---
 
 # My First Note

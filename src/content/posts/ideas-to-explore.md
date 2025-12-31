@@ -5,7 +5,7 @@ growth: seedling
 planted: 2025-12-16
 lastTended: 2025-12-16
 tags: [ideas, seedling, meta]
-draft: false
+draft: true
 ---
 
 # Ideas to Explore

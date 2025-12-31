@@ -19,7 +19,7 @@ growth: seedling            # seedling | budding | evergreen
 planted: 2025-12-16         # Creation date
 lastTended: 2025-12-16      # Last update date
 tags: [topic, subtopic]     # Array of tags
-draft: false                # true to hide from production
+draft: true                # true to hide from production
 image: /images/cover.jpg    # Cover image path
 imageAlt: Description       # Alt text for cover
 ---
@@ -31,7 +31,7 @@ imageAlt: Description       # Alt text for cover
 ---
 title: Page Title           # Required
 description: Page summary   # For SEO
-draft: false                # true to hide
+draft: true                # true to hide
 ---
 ```
 

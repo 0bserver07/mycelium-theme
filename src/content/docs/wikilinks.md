@@ -1,9 +1,11 @@
 ---
+draft: true
 title: Wikilinks Reference
 description: Complete guide to using wikilinks in Mycelium
 category: syntax
 order: 1
 ---
+draft: true
 
 # Wikilinks Reference
 

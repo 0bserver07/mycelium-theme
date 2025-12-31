@@ -5,7 +5,7 @@ growth: budding
 planted: 2025-12-13
 lastTended: 2025-12-16
 tags: [tutorial, design, callouts]
-draft: false
+draft: true
 ---
 
 # Callout Examples

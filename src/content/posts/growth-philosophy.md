@@ -5,7 +5,7 @@ growth: evergreen
 planted: 2025-12-12
 lastTended: 2025-12-16
 tags: [philosophy, digital-garden, growth, writing]
-draft: false
+draft: true
 ---
 
 # The Philosophy of Growth

@@ -1,9 +1,11 @@
 ---
+draft: true
 title: Getting Started
 description: How to set up and use Mycelium for your digital garden
 category: basics
 order: 1
 ---
+draft: true
 
 # Getting Started with Mycelium
 
@@ -41,9 +43,11 @@ Create markdown files in `src/content/posts/` with this frontmatter:
 
 ```yaml
 ---
+draft: true
 title: My First Note
 growth: seedling
 planted: 2025-12-16
 tags: [topic]
 ---
+draft: true
 ```

@@ -1,4 +1,5 @@
 ---
+draft: true
 title: Digital Garden Philosophy
 description: Exploring the philosophy behind digital gardens and how they differ from traditional blogs.
 growth: budding
@@ -6,6 +7,7 @@ planted: 2025-12-15
 lastTended: 2025-12-16
 tags: [digital-garden, philosophy, writing]
 ---
+draft: true
 
 # The Digital Garden Philosophy
 

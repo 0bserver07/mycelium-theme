@@ -1,4 +1,5 @@
 ---
+draft: true
 title: Building with Astro
 description: Why Astro is the perfect choice for digital gardens and static sites.
 growth: evergreen
@@ -6,6 +7,7 @@ planted: 2025-12-10
 lastTended: 2025-12-16
 tags: [astro, web-development, static-sites]
 ---
+draft: true
 
 # Building with Astro
 

@@ -5,7 +5,7 @@ growth: evergreen
 planted: 2025-12-14
 lastTended: 2025-12-16
 tags: [tutorial, obsidian, wikilinks]
-draft: false
+draft: true
 ---
 
 # Using Wikilinks

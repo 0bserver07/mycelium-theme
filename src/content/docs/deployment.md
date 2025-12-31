@@ -1,9 +1,11 @@
 ---
+draft: true
 title: Deployment Guide
 description: How to deploy your Mycelium garden to various platforms
 category: basics
 order: 4
 ---
+draft: true
 
 # Deployment Guide
 

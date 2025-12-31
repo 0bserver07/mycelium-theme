@@ -5,7 +5,7 @@ growth: budding
 planted: 2025-12-10
 lastTended: 2025-12-15
 tags: [pkm, productivity, learning, notes]
-draft: false
+draft: true
 ---
 
 # Personal Knowledge Management

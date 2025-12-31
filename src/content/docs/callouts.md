@@ -1,9 +1,11 @@
 ---
+draft: true
 title: Callouts Reference
 description: All available callout types and how to use them
 category: syntax
 order: 2
 ---
+draft: true
 
 # Callouts Reference
 

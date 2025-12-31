@@ -1,10 +1,12 @@
 ---
+draft: true
 title: Welcome to Mycelium
 description: An introduction to the digital garden concept and how Mycelium helps you cultivate interconnected knowledge.
 growth: seedling
 planted: 2025-12-16
 tags: [digital-garden, introduction, mycelium]
 ---
+draft: true
 
 # Welcome to Your Digital Garden
 

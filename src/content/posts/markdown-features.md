@@ -5,7 +5,7 @@ growth: evergreen
 planted: 2025-12-11
 lastTended: 2025-12-16
 tags: [tutorial, markdown, features, reference]
-draft: false
+draft: true
 ---
 
 # Markdown Features Showcase

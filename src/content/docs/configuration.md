@@ -1,9 +1,11 @@
 ---
+draft: true
 title: Configuration Guide
 description: Complete guide to configuring your Mycelium garden
 category: basics
 order: 3
 ---
+draft: true
 
 # Configuration Guide
 
