@@ -1,0 +1,26 @@
+filters:
+  and:
+    - file.ext == "md"
+properties:
+  note.planted:
+    displayName: Planted
+  note.draft:
+    displayName: Draft
+views:
+  - type: mycelium-network
+    name: Posts
+    filters:
+      and:
+        - file.folder.startsWith("posts")
+    imageFormat: cover
+    titleProperty: note.title
+    dateProperty: note.planted
+    draftStatusProperty: note.draft
+    descriptionProperty: note.description
+    showTags: true
+    tagsProperty: note.tags
+    showDate: true
+    showDraftStatus: true
+    customizeNewButton: true
+    fallbackToEmbeds: true
+    newNoteLocation: "posts"
