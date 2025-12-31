@@ -1,0 +1,10 @@
+{
+	"id": "mycelium-network",
+	"name": "Mycelium Network",
+	"version": "1.0.0",
+	"minAppVersion": "1.0.0",
+	"description": "Card-based CMS view for Obsidian Bases. Display your content as visual cards with images, tags, and bulk operations.",
+	"author": "Mycelium",
+	"authorUrl": "https://github.com/mycelium",
+	"isDesktopOnly": false
+}

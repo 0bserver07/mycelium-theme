@@ -1,0 +1,9 @@
+{
+	"id": "mycelium-focus",
+	"name": "Mycelium Focus",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Maintain focus by limiting Obsidian to a single tab at a time.",
+	"author": "Mycelium",
+	"isDesktopOnly": false
+}

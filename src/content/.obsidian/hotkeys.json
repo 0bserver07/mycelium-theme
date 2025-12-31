@@ -125,15 +125,6 @@
       "key": "'"
     }
   ],
-  "astro-modular-settings:open-settings": [
-    {
-      "modifiers": [
-        "Mod",
-        "Shift"
-      ],
-      "key": ","
-    }
-  ],
   "seo:open-global": [
     {
       "modifiers": [

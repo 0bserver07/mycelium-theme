@@ -1,0 +1,34 @@
+/* Mycelium Prune - UI Customization Styles */
+
+/* Hide help button */
+.mycelium-prune-hide-help .workspace-drawer-vault-actions .clickable-icon:has(svg.help) {
+	display: none !important;
+}
+
+/* Show help button on hover */
+.mycelium-prune-hover-help .workspace-drawer-vault-actions .clickable-icon:has(svg.help) {
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+.mycelium-prune-hover-help .workspace-drawer-vault-actions:hover .clickable-icon:has(svg.help) {
+	opacity: 1;
+}
+
+/* Custom help button replacement */
+.mycelium-prune-help-replacement {
+	cursor: pointer;
+}
+
+/* Hide sync button (mobile) */
+.mycelium-prune-hide-sync .sync-status-icon:not(.mycelium-prune-sync-replacement) {
+	display: none !important;
+}
+
+/* Custom sync button replacement */
+.mycelium-prune-sync-replacement {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

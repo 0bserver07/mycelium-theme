@@ -1,0 +1,10 @@
+/* Mycelium Focus - Mobile Styles */
+
+/* Hide the new tab button on mobile when setting is enabled */
+.mycelium-focus-hide-mobile-tab .workspace-tab-header-new-tab {
+	display: none !important;
+}
+
+.mycelium-focus-hide-mobile-tab .workspace-tab-header-tab-list {
+	display: none !important;
+}

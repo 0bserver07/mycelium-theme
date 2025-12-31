@@ -1,0 +1,9 @@
+{
+	"id": "mycelium-label",
+	"name": "Mycelium Label",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Display a frontmatter property (like title) instead of the filename throughout Obsidian.",
+	"author": "Mycelium",
+	"isDesktopOnly": false
+}

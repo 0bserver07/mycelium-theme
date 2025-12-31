@@ -1,0 +1,10 @@
+{
+	"id": "mycelium-climate",
+	"name": "Mycelium Climate",
+	"version": "1.0.0",
+	"minAppVersion": "1.0.0",
+	"description": "Theme customization settings. Control color schemes, fonts, widths, and visual styling options.",
+	"author": "Mycelium",
+	"authorUrl": "https://github.com/mycelium",
+	"isDesktopOnly": false
+}

@@ -1,0 +1,9 @@
+{
+	"id": "mycelium-signal",
+	"name": "Mycelium Signal",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Analyze notes for SEO optimization with actionable suggestions for better search visibility.",
+	"author": "Mycelium",
+	"isDesktopOnly": false
+}

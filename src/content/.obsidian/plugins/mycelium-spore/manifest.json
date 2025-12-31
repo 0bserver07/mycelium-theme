@@ -1,0 +1,9 @@
+{
+	"id": "mycelium-spore",
+	"name": "Mycelium Spore",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Content management for Astro sites with templates, auto-rename, and content types.",
+	"author": "Mycelium",
+	"isDesktopOnly": false
+}

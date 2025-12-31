@@ -3,7 +3,7 @@
   "showViewHeader": true,
   "showRibbon": false,
   "enabledCssSnippets": [
-    "astro-modular-styling"
+    "mycelium-styling"
   ],
   "theme": "system",
   "accentColor": ""

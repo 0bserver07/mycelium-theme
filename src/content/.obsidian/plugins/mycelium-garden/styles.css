@@ -1,0 +1,121 @@
+/* Mycelium Garden - Setup Wizard Styles */
+
+/* Wizard modal */
+.mycelium-wizard {
+	padding: 1em;
+}
+
+.mycelium-wizard h2 {
+	margin-top: 0;
+	margin-bottom: 1em;
+}
+
+.mycelium-wizard h3 {
+	margin-top: 1.5em;
+	margin-bottom: 0.5em;
+	padding-bottom: 0.25em;
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.mycelium-wizard p {
+	color: var(--text-muted);
+	margin-bottom: 1em;
+}
+
+.mycelium-wizard ul {
+	margin: 0.5em 0 1em 1.5em;
+}
+
+.mycelium-wizard li {
+	margin-bottom: 0.25em;
+}
+
+/* Content type items */
+.wizard-content-types {
+	margin-bottom: 1em;
+}
+
+.wizard-content-type-item {
+	background: var(--background-secondary);
+	border-radius: 4px;
+	margin-bottom: 0.5em;
+}
+
+.wizard-content-type-item .setting-item {
+	border: none;
+	padding: 0.5em 1em;
+}
+
+/* Muted text */
+.wizard-muted {
+	color: var(--text-faint);
+	font-size: 0.9em;
+}
+
+/* Missing plugins list */
+.wizard-missing-plugins {
+	color: var(--text-muted);
+	font-style: italic;
+}
+
+/* Summary section */
+.wizard-summary {
+	background: var(--background-secondary);
+	border-radius: 8px;
+	padding: 1em;
+	margin: 1em 0;
+}
+
+.wizard-summary h3 {
+	margin-top: 0;
+	border: none;
+	font-size: 1em;
+}
+
+.wizard-summary ul {
+	margin-bottom: 0;
+}
+
+/* Navigation buttons */
+.wizard-nav {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 2em;
+	padding-top: 1em;
+	border-top: 1px solid var(--background-modifier-border);
+}
+
+.wizard-nav button {
+	min-width: 100px;
+}
+
+/* Settings tab styles */
+.garden-plugin-list {
+	margin: 1em 0;
+	padding: 0.75em 1em;
+	background: var(--background-secondary);
+	border-radius: 4px;
+}
+
+.garden-plugin-list.missing {
+	background: var(--background-modifier-error-hover);
+}
+
+.garden-plugin-list strong {
+	display: block;
+	margin-bottom: 0.5em;
+}
+
+.garden-plugin-list ul {
+	margin: 0;
+	padding-left: 1.5em;
+}
+
+.garden-plugin-list li {
+	margin-bottom: 0.25em;
+}
+
+.garden-plugin-desc {
+	color: var(--text-muted);
+	font-size: 0.9em;
+}

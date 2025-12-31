@@ -1,0 +1,21 @@
+/* Mycelium Climate - Theme Settings Styles */
+
+/* Settings tab styling */
+.mycelium-climate-settings h3 {
+	margin-top: 1.5em;
+	padding-bottom: 0.25em;
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+/* Slider improvements */
+.mycelium-climate-settings .setting-item-control input[type="range"] {
+	width: 150px;
+}
+
+/* Text area for custom CSS */
+.mycelium-climate-settings textarea {
+	width: 100%;
+	min-height: 100px;
+	font-family: var(--font-monospace);
+	font-size: 0.9em;
+}

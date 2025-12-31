@@ -1,0 +1,9 @@
+{
+	"id": "mycelium-prune",
+	"name": "Mycelium Prune",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Prune and customize Obsidian's interface by hiding elements or replacing buttons with custom commands.",
+	"author": "Mycelium",
+	"isDesktopOnly": false
+}

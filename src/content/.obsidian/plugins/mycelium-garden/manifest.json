@@ -1,0 +1,10 @@
+{
+	"id": "mycelium-garden",
+	"name": "Mycelium Garden",
+	"version": "1.0.0",
+	"minAppVersion": "1.0.0",
+	"description": "Setup wizard and configuration orchestrator for the Mycelium CMS plugin suite. Detects your project structure and configures all related plugins.",
+	"author": "Mycelium",
+	"authorUrl": "https://github.com/mycelium",
+	"isDesktopOnly": false
+}
