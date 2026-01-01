@@ -81,7 +81,8 @@ const allTags = [...new Set(allPostsSorted.flatMap((post) => post.data.tags || [
       <Pagination
         currentPage={1}
         totalPages={totalPages}
-        baseUrl="/posts/"
+        baseUrl="/posts/page/"
+        firstPageUrl="/posts/"
       />
     )}
   </div>
