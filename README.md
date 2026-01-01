@@ -133,6 +133,44 @@ export const siteConfig = {
 3. **Commit** with obsidian-git or terminal
 4. **Deploy** to Netlify/Vercel/etc.
 
+## Receiving Theme Updates
+
+Your garden can receive updates from the upstream theme without losing your content:
+
+### First Time Setup
+```bash
+git remote add upstream https://github.com/0bserver07/mycelium-theme.git
+```
+
+### Update Workflow
+```bash
+git stash push -u                    # Stash your changes (including untracked)
+git fetch upstream                   # Get latest theme updates
+git merge upstream/master            # Merge theme updates
+git stash pop                        # Restore your content
+```
+
+### Why This Works
+
+The repo separates **theme files** from **user content**:
+
+| Type | Files | Who Modifies |
+|------|-------|--------------|
+| **Theme** | `src/components/`, `src/layouts/`, `src/pages/`, `src/styles/` | Upstream only |
+| **User Content** | `src/content/posts/`, `src/content/pages/`, `src/content/projects/` | You only |
+| **User Config** | `src/config.ts` | You only |
+| **Shared** | `src/content/.obsidian/` | Both (plugins update upstream) |
+
+Theme updates merge cleanly because you don't edit theme files. Content conflicts are rare because upstream doesn't touch your posts.
+
+## Draft Content
+
+Content with `draft: true` in frontmatter:
+- **Dev mode** (`npm run dev`): Visible - so you can preview while writing
+- **Production** (`npm run build`): Hidden - won't be published
+
+Sample posts ship as drafts. Create your own content and set `draft: false` to publish.
+
 ## .gitignore
 
 Add to your `.gitignore`:
@@ -140,6 +178,25 @@ Add to your `.gitignore`:
 # Obsidian workspace (device-specific)
 **/.obsidian/workspace.json
 **/.obsidian/workspace-mobile.json
+```
+
+## Troubleshooting
+
+### "No plugins found" in Obsidian
+You opened the repo root. Close Obsidian, then open `src/content/` specifically.
+
+### Tags/pages return 404 in dev
+Check that your posts have `draft: false` or that you're testing with dev server (drafts visible in dev mode only).
+
+### BRAT keeps downloading old plugins
+Clear `src/content/.obsidian/plugins/obsidian42-brat/data.json` - set `pluginList` and `themesList` to empty arrays.
+
+### Merge conflicts on update
+If you accidentally edited theme files, use:
+```bash
+git checkout --theirs src/components/  # Accept upstream theme changes
+git add .
+git commit -m "Resolve merge conflicts, accept upstream theme"
 ```
 
 ## Built With
