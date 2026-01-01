@@ -5,7 +5,9 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
 export async function getStaticPaths() {
-  const pages = await getCollection('pages', ({ data }) => !data.draft);
+  const pages = await getCollection('pages', ({ data }) => {
+    return import.meta.env.PROD ? !data.draft : true;
+  });
   return pages.map(page => ({
     params: { slug: page.id },
     props: { page }

@@ -9,7 +9,9 @@
 import { getCollection } from 'astro:content';
 
 // Get all posts for the graph
-const posts = await getCollection('posts', ({ data }) => !data.draft);
+const posts = await getCollection('posts', ({ data }) => {
+  return import.meta.env.PROD ? !data.draft : true;
+});
 
 // Build graph data
 const nodes = posts.map(post => ({
