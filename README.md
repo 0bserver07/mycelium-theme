@@ -122,9 +122,11 @@ export const siteConfig = {
 | Command | Action |
 |---------|--------|
 | `npm install` | Install dependencies |
+| `npm run setup` | Configure site name, URL, socials |
 | `npm run dev` | Development server (localhost:4321) |
 | `npm run build` | Build to `./dist/` |
 | `npm run preview` | Preview production build |
+| `npm run update-theme` | Pull latest theme updates from upstream |
 
 ## Recommended Workflow
 
@@ -137,13 +139,19 @@ export const siteConfig = {
 
 Your garden can receive updates from the upstream theme without losing your content:
 
-### First Time Setup
 ```bash
-git remote add upstream https://github.com/0bserver07/mycelium-theme.git
+npm run update-theme
 ```
 
-### Update Workflow
+That's it. The script automatically:
+1. Adds the upstream remote (first time only)
+2. Stashes your local changes
+3. Fetches and merges theme updates
+4. Restores your changes
+
+### Manual Workflow (if you prefer)
 ```bash
+git remote add upstream https://github.com/0bserver07/mycelium-theme.git  # first time
 git stash push -u                    # Stash your changes (including untracked)
 git fetch upstream                   # Get latest theme updates
 git merge upstream/master            # Merge theme updates

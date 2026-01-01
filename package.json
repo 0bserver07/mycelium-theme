@@ -7,7 +7,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "setup": "node scripts/setup.mjs"
+    "setup": "node scripts/setup.mjs",
+    "update-theme": "bash scripts/update-theme.sh"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",
