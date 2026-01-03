@@ -2,13 +2,45 @@
  * Remark plugin for processing Obsidian-style wikilinks [[...]]
  *
  * Converts:
- * - [[Post Title]] → link to /posts/post-title/
+ * - [[Post Title]] → link to correct collection (/posts/, /projects/, or /)
  * - [[Post Title|Display Text]] → link with custom text
  * - [[Post Title#Section]] → link with anchor
  * - ![[image.jpg]] → image embed
  */
 
 import { visit } from 'unist-util-visit';
+import fs from 'fs';
+import path from 'path';
+
+// Build slug to collection map at module load time
+function buildSlugMap(): Map<string, string> {
+  const slugMap = new Map<string, string>();
+  const contentDir = path.join(process.cwd(), 'src/content');
+
+  const collections = ['posts', 'projects', 'pages'];
+  const pathMap: Record<string, string> = {
+    posts: '/posts/',
+    projects: '/projects/',
+    pages: '/'
+  };
+
+  for (const collection of collections) {
+    const collectionDir = path.join(contentDir, collection);
+    if (fs.existsSync(collectionDir)) {
+      const files = fs.readdirSync(collectionDir);
+      for (const file of files) {
+        if (file.endsWith('.md') || file.endsWith('.mdx')) {
+          const slug = file.replace(/\.mdx?$/, '');
+          slugMap.set(slug, pathMap[collection]);
+        }
+      }
+    }
+  }
+
+  return slugMap;
+}
+
+const slugMap = buildSlugMap();
 
 // Create slug from title
 function createSlug(title: string): string {
@@ -123,7 +155,10 @@ export function remarkWikilinks() {
           // Link wikilink: [[Post Title]]
           const { link, anchor, display } = parseWikilink(content);
           const slug = createSlug(link);
-          let url = `/posts/${slug}/`;
+
+          // Look up the correct path for this slug, default to /posts/
+          const basePath = slugMap.get(slug) || '/posts/';
+          let url = `${basePath}${slug}/`;
 
           if (anchor) {
             url += `#${createSlug(anchor)}`;
