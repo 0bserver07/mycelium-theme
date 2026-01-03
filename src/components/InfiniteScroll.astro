@@ -1,0 +1,122 @@
+---
+/**
+ * InfiniteScroll Component
+ *
+ * Wraps a list of items and reveals them as user scrolls.
+ * All items are rendered but hidden initially, then revealed in batches.
+ */
+
+export interface Props {
+  /** Number of items to show initially */
+  initialCount?: number;
+  /** Number of items to reveal per scroll */
+  batchSize?: number;
+}
+
+const { initialCount = 10, batchSize = 10 } = Astro.props;
+---
+
+<div
+  class="infinite-scroll-container"
+  data-initial-count={initialCount}
+  data-batch-size={batchSize}
+>
+  <div class="infinite-scroll-items">
+    <slot />
+  </div>
+
+  <div class="infinite-scroll-loader hidden py-8 text-center text-primary-500 dark:text-primary-400">
+    <svg class="animate-spin inline-block w-6 h-6 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    Loading more...
+  </div>
+
+  <div class="infinite-scroll-end hidden py-8 text-center text-primary-500 dark:text-primary-400">
+    You've reached the end
+  </div>
+</div>
+
+<script>
+  function initInfiniteScroll() {
+    const containers = document.querySelectorAll('.infinite-scroll-container');
+
+    containers.forEach(container => {
+      const initialCount = parseInt(container.dataset.initialCount || '10');
+      const batchSize = parseInt(container.dataset.batchSize || '10');
+      const itemsContainer = container.querySelector('.infinite-scroll-items');
+      const loader = container.querySelector('.infinite-scroll-loader');
+      const endMessage = container.querySelector('.infinite-scroll-end');
+
+      if (!itemsContainer) return;
+
+      const items = Array.from(itemsContainer.children) as HTMLElement[];
+      let visibleCount = initialCount;
+
+      // Hide items beyond initial count
+      items.forEach((item, index) => {
+        if (index >= initialCount) {
+          item.classList.add('hidden');
+          item.dataset.infiniteHidden = 'true';
+        }
+      });
+
+      // Show end message if all items fit initially
+      if (items.length <= initialCount && endMessage) {
+        endMessage.classList.remove('hidden');
+      }
+
+      // Intersection observer for infinite scroll
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && visibleCount < items.length) {
+            // Show loader briefly
+            if (loader) loader.classList.remove('hidden');
+
+            // Reveal next batch with slight delay for UX
+            setTimeout(() => {
+              const nextBatch = items.slice(visibleCount, visibleCount + batchSize);
+              nextBatch.forEach(item => {
+                item.classList.remove('hidden');
+                delete item.dataset.infiniteHidden;
+                // Fade in animation
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                requestAnimationFrame(() => {
+                  item.style.transition = 'opacity 0.3s, transform 0.3s';
+                  item.style.opacity = '1';
+                  item.style.transform = 'translateY(0)';
+                });
+              });
+
+              visibleCount += batchSize;
+
+              if (loader) loader.classList.add('hidden');
+
+              // Show end message when done
+              if (visibleCount >= items.length && endMessage) {
+                endMessage.classList.remove('hidden');
+                observer.disconnect();
+              }
+            }, 200);
+          }
+        });
+      }, {
+        rootMargin: '200px', // Start loading before user reaches bottom
+      });
+
+      // Observe the loader element
+      if (loader && items.length > initialCount) {
+        observer.observe(loader);
+        loader.classList.remove('hidden');
+      }
+    });
+  }
+
+  // Run on page load
+  initInfiniteScroll();
+
+  // Re-run on Astro page transitions
+  document.addEventListener('astro:after-swap', initInfiniteScroll);
+</script>

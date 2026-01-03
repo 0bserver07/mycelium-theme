@@ -3,6 +3,7 @@
  * Paginated Posts Listing
  *
  * Dynamic route for paginated posts pages (/posts/page/2, etc.)
+ * Supports grid/list layout via config
  */
 
 import type { GetStaticPaths } from 'astro';
@@ -11,10 +12,16 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
 import PostCard from '../../../components/PostCard.astro';
+import PostListItem from '../../../components/PostListItem.astro';
 import Pagination from '../../../components/Pagination.astro';
 import { siteConfig } from '../../../config';
 
 export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
+  // Skip generating paginated pages if using infinite scroll
+  if (siteConfig.posts.pagination === 'infinite') {
+    return [];
+  }
+
   const allPosts = await getCollection('posts', ({ data }) => {
     return import.meta.env.PROD ? !data.draft : true;
   });
@@ -30,6 +37,7 @@ export const getStaticPaths: GetStaticPaths = async ({ paginate }) => {
 };
 
 const { page } = Astro.props;
+const isList = siteConfig.posts.layout === 'list';
 
 // Get unique tags
 const allTags = [...new Set(page.data.flatMap((post) => post.data.tags || []))].sort();
@@ -38,7 +46,7 @@ const allTags = [...new Set(page.data.flatMap((post) => post.data.tags || []))].
 <BaseLayout title={`Garden - Page ${page.currentPage}`} description="All notes in the digital garden">
   <Header slot="header" />
 
-  <div class="max-w-5xl mx-auto px-4 py-8 sm:py-12">
+  <div class:list={["mx-auto px-4 py-8 sm:py-12", isList ? "max-w-3xl" : "max-w-5xl"]}>
     <!-- Header -->
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-primary-900 dark:text-primary-100 mb-2">
@@ -64,12 +72,22 @@ const allTags = [...new Set(page.data.flatMap((post) => post.data.tags || []))].
       </div>
     )}
 
-    <!-- Posts Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-      {page.data.map((post) => (
-        <PostCard post={post} />
-      ))}
-    </div>
+    <!-- Posts -->
+    {isList ? (
+      <!-- List Layout -->
+      <div class="divide-y divide-primary-100 dark:divide-primary-800 mb-12">
+        {page.data.map((post) => (
+          <PostListItem post={post} />
+        ))}
+      </div>
+    ) : (
+      <!-- Grid Layout -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {page.data.map((post) => (
+          <PostCard post={post} />
+        ))}
+      </div>
+    )}
 
     <!-- Pagination -->
     <Pagination

@@ -55,6 +55,8 @@ export interface MyceliumConfig {
     showReadingTime: boolean;
     showWordCount: boolean;
     showTags: boolean;
+    layout: 'grid' | 'list';
+    pagination: 'pages' | 'infinite';
   };
 
   // Comments (Giscus)
@@ -153,6 +155,8 @@ export const siteConfig: MyceliumConfig = {
     showReadingTime: true,
     showWordCount: false,
     showTags: true,
+    layout: 'grid',        // 'grid' = card grid, 'list' = blog-style list
+    pagination: 'pages',   // 'pages' = numbered pages, 'infinite' = infinite scroll
   },
 
   // Uncomment and configure when ready for comments

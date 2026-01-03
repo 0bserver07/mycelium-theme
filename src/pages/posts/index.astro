@@ -3,13 +3,16 @@
  * Posts Listing Page
  *
  * Lists all garden posts/notes
+ * Supports grid/list layout and pages/infinite pagination via config
  */
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import PostCard from '../../components/PostCard.astro';
+import PostListItem from '../../components/PostListItem.astro';
 import Pagination from '../../components/Pagination.astro';
+import InfiniteScroll from '../../components/InfiniteScroll.astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '../../config';
 
@@ -23,10 +26,14 @@ const allPostsSorted = allPosts.sort(
   (a, b) => b.data.planted.valueOf() - a.data.planted.valueOf()
 );
 
-// Paginate - show first page
-const postsPerPage = siteConfig.posts.postsPerPage;
+// Config
+const { postsPerPage, layout, pagination } = siteConfig.posts;
+const isInfinite = pagination === 'infinite';
+const isList = layout === 'list';
+
+// For infinite scroll, show all posts; for pages, show first page only
+const posts = isInfinite ? allPostsSorted : allPostsSorted.slice(0, postsPerPage);
 const totalPages = Math.ceil(allPostsSorted.length / postsPerPage);
-const posts = allPostsSorted.slice(0, postsPerPage);
 
 // Get unique tags from all posts
 const allTags = [...new Set(allPostsSorted.flatMap((post) => post.data.tags || []))].sort();
@@ -35,14 +42,14 @@ const allTags = [...new Set(allPostsSorted.flatMap((post) => post.data.tags || [
 <BaseLayout title="Garden" description="All notes in the digital garden">
   <Header slot="header" />
 
-  <div class="max-w-5xl mx-auto px-4 py-8 sm:py-12">
+  <div class:list={["mx-auto px-4 py-8 sm:py-12", isList ? "max-w-3xl" : "max-w-5xl"]}>
     <!-- Header -->
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-primary-900 dark:text-primary-100 mb-2">
         The Garden
       </h1>
       <p class="text-primary-600 dark:text-primary-400">
-        {posts.length} notes growing in this garden
+        {allPostsSorted.length} notes growing in this garden
       </p>
     </div>
 
@@ -61,29 +68,63 @@ const allTags = [...new Set(allPostsSorted.flatMap((post) => post.data.tags || [
       </div>
     )}
 
-    <!-- Posts Grid -->
+    <!-- Posts -->
     {posts.length > 0 ? (
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-        {posts.map((post) => (
-          <PostCard post={post} />
-        ))}
-      </div>
+      isInfinite ? (
+        <!-- Infinite Scroll Mode -->
+        <InfiniteScroll initialCount={postsPerPage} batchSize={postsPerPage}>
+          {isList ? (
+            <!-- List Layout -->
+            <div class="divide-y divide-primary-100 dark:divide-primary-800">
+              {posts.map((post) => (
+                <PostListItem post={post} />
+              ))}
+            </div>
+          ) : (
+            <!-- Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {posts.map((post) => (
+                <PostCard post={post} />
+              ))}
+            </div>
+          )}
+        </InfiniteScroll>
+      ) : (
+        <!-- Pages Mode -->
+        <>
+          {isList ? (
+            <!-- List Layout -->
+            <div class="divide-y divide-primary-100 dark:divide-primary-800 mb-12">
+              {posts.map((post) => (
+                <PostListItem post={post} />
+              ))}
+            </div>
+          ) : (
+            <!-- Grid Layout -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+              {posts.map((post) => (
+                <PostCard post={post} />
+              ))}
+            </div>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={1}
+              totalPages={totalPages}
+              baseUrl="/posts/page/"
+              firstPageUrl="/posts/"
+            />
+          )}
+        </>
+      )
     ) : (
       <div class="text-center py-12">
         <p class="text-primary-600 dark:text-primary-400">
           No notes have been planted yet. Start adding content to see them here!
         </p>
       </div>
-    )}
-
-    <!-- Pagination -->
-    {totalPages > 1 && (
-      <Pagination
-        currentPage={1}
-        totalPages={totalPages}
-        baseUrl="/posts/page/"
-        firstPageUrl="/posts/"
-      />
     )}
   </div>
 
