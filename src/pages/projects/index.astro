@@ -1,90 +1,107 @@
 ---
+/**
+ * Projects Listing Page
+ *
+ * Lists all projects with grid/list layout toggle
+ */
+
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import ProjectListItem from '../../components/ProjectListItem.astro';
+import LayoutToggle from '../../components/LayoutToggle.astro';
 
-const projects = await getCollection('projects');
+const allProjects = await getCollection('projects');
+
+// Sort: featured first, then by title
+const projects = allProjects.sort((a, b) => {
+  if (a.data.featured && !b.data.featured) return -1;
+  if (!a.data.featured && b.data.featured) return 1;
+  return a.data.title.localeCompare(b.data.title);
+});
+
 const featuredProjects = projects.filter(p => p.data.featured);
 const otherProjects = projects.filter(p => !p.data.featured);
+
+// Default to grid layout
+const defaultLayout = 'grid';
 ---
 
 <BaseLayout title="Projects" description="A showcase of my projects and work">
   <Header slot="header" />
-  <div class="container mx-auto px-4 py-12 max-w-6xl">
-    <header class="mb-12 text-center">
-      <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Projects</h1>
-      <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-        A collection of things I've built and contributed to
-      </p>
-    </header>
 
-    {featuredProjects.length > 0 && (
-      <section class="mb-16">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Featured</h2>
-        <div class="grid md:grid-cols-2 gap-6">
-          {featuredProjects.map(project => (
-            <a
-              href={`/projects/${project.id}`}
-              class="group block p-6 bg-white dark:bg-gray-800 rounded-xl border-2 border-primary-200 dark:border-primary-800 hover:border-primary-400 dark:hover:border-primary-600 transition-colors"
-            >
-              <div class="flex items-start justify-between mb-3">
-                <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400">
-                  {project.data.title}
-                </h3>
-                <span class="px-2 py-1 text-xs font-medium bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 rounded">
-                  {project.data.status}
-                </span>
+  <div data-layout-container class="container mx-auto px-4 py-12 max-w-5xl">
+    <!-- Header with Layout Toggle -->
+    <div class="flex items-start justify-between mb-12">
+      <div class="text-center flex-1">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Projects</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          A collection of things I've built and contributed to
+        </p>
+      </div>
+      <LayoutToggle defaultLayout={defaultLayout} storageKey="projects-layout" />
+    </div>
+
+    {projects.length > 0 ? (
+      <>
+        <!-- Grid Layout -->
+        <div data-view="grid" class={defaultLayout === 'list' ? 'hidden' : ''}>
+          {featuredProjects.length > 0 && (
+            <section class="mb-12">
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Featured</h2>
+              <div class="grid md:grid-cols-2 gap-6">
+                {featuredProjects.map(project => (
+                  <ProjectCard project={project} featured={true} />
+                ))}
               </div>
-              <p class="text-gray-600 dark:text-gray-400 mb-4">
-                {project.data.description}
-              </p>
-              {project.data.technologies && (
-                <div class="flex flex-wrap gap-2">
-                  {project.data.technologies.map(tech => (
-                    <span class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </a>
-          ))}
-        </div>
-      </section>
-    )}
+            </section>
+          )}
 
-    {otherProjects.length > 0 && (
-      <section>
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">All Projects</h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {otherProjects.map(project => (
-            <a
-              href={`/projects/${project.id}`}
-              class="group block p-5 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-400 dark:hover:border-primary-600 transition-colors"
-            >
-              <div class="flex items-center justify-between mb-2">
-                <h3 class="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400">
-                  {project.data.title}
-                </h3>
-                <span class="text-xs text-gray-500 dark:text-gray-400">
-                  {project.data.status}
-                </span>
+          {otherProjects.length > 0 && (
+            <section>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">All Projects</h2>
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {otherProjects.map(project => (
+                  <ProjectCard project={project} />
+                ))}
               </div>
-              <p class="text-sm text-gray-600 dark:text-gray-400">
-                {project.data.description}
-              </p>
-            </a>
-          ))}
+            </section>
+          )}
         </div>
-      </section>
-    )}
 
-    {projects.length === 0 && (
+        <!-- List Layout -->
+        <div data-view="list" class={defaultLayout === 'grid' ? 'hidden' : ''}>
+          {featuredProjects.length > 0 && (
+            <section class="mb-8">
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Featured</h2>
+              <div class="divide-y divide-gray-100 dark:divide-gray-800">
+                {featuredProjects.map(project => (
+                  <ProjectListItem project={project} featured={true} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {otherProjects.length > 0 && (
+            <section>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">All Projects</h2>
+              <div class="divide-y divide-gray-100 dark:divide-gray-800">
+                {otherProjects.map(project => (
+                  <ProjectListItem project={project} />
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+      </>
+    ) : (
       <div class="text-center py-12">
         <p class="text-gray-500 dark:text-gray-400">No projects yet. Start creating!</p>
       </div>
     )}
   </div>
+
   <Footer slot="footer" />
 </BaseLayout>

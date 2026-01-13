@@ -8,12 +8,13 @@
 
 export interface Props {
   defaultLayout?: 'grid' | 'list';
+  storageKey?: string;
 }
 
-const { defaultLayout = 'grid' } = Astro.props;
+const { defaultLayout = 'grid', storageKey = 'layout-preference' } = Astro.props;
 ---
 
-<div class="layout-toggle flex items-center gap-1 bg-primary-100 dark:bg-primary-800 rounded-lg p-1" data-default={defaultLayout}>
+<div class="layout-toggle flex items-center gap-1 bg-primary-100 dark:bg-primary-800 rounded-lg p-1" data-default={defaultLayout} data-storage-key={storageKey}>
   <button
     type="button"
     data-layout="grid"
@@ -42,6 +43,7 @@ const { defaultLayout = 'grid' } = Astro.props;
     if (!toggle) return;
 
     const defaultLayout = toggle.getAttribute('data-default') || 'grid';
+    const storageKey = toggle.getAttribute('data-storage-key') || 'layout-preference';
     const gridBtn = toggle.querySelector('[data-layout="grid"]');
     const listBtn = toggle.querySelector('[data-layout="list"]');
     const gridView = document.querySelector('[data-view="grid"]');
@@ -51,7 +53,7 @@ const { defaultLayout = 'grid' } = Astro.props;
     if (!gridBtn || !listBtn || !gridView || !listView) return;
 
     // Get saved preference or use default
-    const saved = localStorage.getItem('posts-layout') || defaultLayout;
+    const saved = localStorage.getItem(storageKey) || defaultLayout;
 
     function setLayout(layout: string) {
       // Update buttons
@@ -88,7 +90,7 @@ const { defaultLayout = 'grid' } = Astro.props;
       }
 
       // Save preference
-      localStorage.setItem('posts-layout', layout);
+      localStorage.setItem(storageKey, layout);
     }
 
     // Set initial layout

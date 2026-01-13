@@ -1,0 +1,65 @@
+---
+/**
+ * ProjectCard Component
+ *
+ * Card display for project previews with:
+ * - Title
+ * - Description
+ * - Status badge
+ * - Technologies
+ */
+
+import type { CollectionEntry } from 'astro:content';
+
+export interface Props {
+  project: CollectionEntry<'projects'>;
+  featured?: boolean;
+}
+
+const { project, featured = false } = Astro.props;
+const { title, description, status, technologies } = project.data;
+---
+
+<a
+  href={`/projects/${project.id}/`}
+  class:list={[
+    "group block rounded-lg border transition-colors",
+    featured
+      ? "p-6 bg-white dark:bg-gray-800 border-2 border-primary-200 dark:border-primary-800 hover:border-primary-400 dark:hover:border-primary-600"
+      : "p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary-400 dark:hover:border-primary-600"
+  ]}
+>
+  <div class="flex items-start justify-between mb-3">
+    <h3 class:list={[
+      "font-bold text-gray-900 dark:text-gray-100 group-hover:text-primary-600 dark:group-hover:text-primary-400",
+      featured ? "text-xl" : "text-base"
+    ]}>
+      {title}
+    </h3>
+    <span class:list={[
+      "px-2 py-1 text-xs font-medium rounded",
+      featured
+        ? "bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300"
+        : "text-gray-500 dark:text-gray-400"
+    ]}>
+      {status}
+    </span>
+  </div>
+
+  <p class:list={[
+    "text-gray-600 dark:text-gray-400 mb-4",
+    featured ? "text-base" : "text-sm"
+  ]}>
+    {description}
+  </p>
+
+  {technologies && technologies.length > 0 && (
+    <div class="flex flex-wrap gap-2">
+      {technologies.slice(0, featured ? 6 : 3).map((tech: string) => (
+        <span class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
+          {tech}
+        </span>
+      ))}
+    </div>
+  )}
+</a>

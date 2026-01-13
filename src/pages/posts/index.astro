@@ -53,7 +53,7 @@ const allTags = [...new Set(allPostsSorted.flatMap((post) => post.data.tags || [
           {allPostsSorted.length} notes growing in this garden
         </p>
       </div>
-      <LayoutToggle defaultLayout={layout} />
+      <LayoutToggle defaultLayout={layout} storageKey="posts-layout" />
     </div>
 
     <!-- Tags Filter (if there are tags) -->
