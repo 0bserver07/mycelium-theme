@@ -10,17 +10,20 @@
  * - Tags
  */
 
-import type { Post } from '../types';
+import type { Post, GrowthStatus } from '../types';
 import GrowthIndicator from './GrowthIndicator.astro';
 import Tags from './Tags.astro';
 import { siteConfig } from '../config';
 
 export interface Props {
   post: Post;
+  effectiveGrowth?: GrowthStatus; // Calculated growth (may differ from post.data.growth)
 }
 
-const { post } = Astro.props;
+const { post, effectiveGrowth } = Astro.props;
 const { title, description, growth, planted, tags } = post.data;
+// Use effective growth if provided, otherwise fall back to manual growth
+const displayGrowth = effectiveGrowth || growth;
 
 const plantedDate = planted.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -29,12 +32,12 @@ const plantedDate = planted.toLocaleDateString('en-US', {
 });
 ---
 
-<article class="card p-5 hover:shadow-lg transition-all duration-200 group">
-  <a href={`/posts/${post.id}/`} class="block">
+<article class="card p-5 h-full hover:shadow-lg transition-all duration-200 group flex flex-col">
+  <a href={`/posts/${post.id}/`} class="block flex-grow">
     <!-- Header with growth indicator and date -->
     <div class="flex items-center justify-between mb-3">
       {siteConfig.garden.showGrowthStatus && (
-        <GrowthIndicator status={growth} size="sm" />
+        <GrowthIndicator status={displayGrowth} size="sm" />
       )}
       <time class="text-xs text-primary-500 dark:text-primary-500">
         {plantedDate}
@@ -56,7 +59,7 @@ const plantedDate = planted.toLocaleDateString('en-US', {
 
   <!-- Tags -->
   {siteConfig.posts.showTags && tags && tags.length > 0 && (
-    <div class="mt-3 pt-3 border-t border-primary-100 dark:border-primary-800">
+    <div class="mt-auto pt-3 border-t border-primary-100 dark:border-primary-800">
       <Tags tags={tags.slice(0, 3)} />
     </div>
   )}

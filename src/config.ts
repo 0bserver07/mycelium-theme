@@ -47,6 +47,8 @@ export interface MyceliumConfig {
     defaultStatus: GrowthStatus;
     showPlantedDate: boolean;
     showLastTended: boolean;
+    // Auto-growth: calculate growth based on backlinks and series
+    autoGrowth: boolean;
   };
 
   // Posts settings
@@ -147,6 +149,7 @@ export const siteConfig: MyceliumConfig = {
     defaultStatus: 'seedling',
     showPlantedDate: true,
     showLastTended: true,
+    autoGrowth: true, // Auto-calculate growth based on backlinks and series
   },
 
   // Posts settings

@@ -11,17 +11,20 @@
  * - Reading time
  */
 
-import type { Post } from '../types';
+import type { Post, GrowthStatus } from '../types';
 import GrowthIndicator from './GrowthIndicator.astro';
 import Tags from './Tags.astro';
 import { siteConfig } from '../config';
 
 export interface Props {
   post: Post;
+  effectiveGrowth?: GrowthStatus; // Calculated growth (may differ from post.data.growth)
 }
 
-const { post } = Astro.props;
+const { post, effectiveGrowth } = Astro.props;
 const { title, description, growth, planted, tags } = post.data;
+// Use effective growth if provided, otherwise fall back to manual growth
+const displayGrowth = effectiveGrowth || growth;
 
 const plantedDate = planted.toLocaleDateString('en-US', {
   year: 'numeric',
@@ -43,7 +46,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
       {siteConfig.garden.showGrowthStatus && (
         <>
           <span class="text-primary-300 dark:text-primary-700">·</span>
-          <GrowthIndicator status={growth} size="sm" showLabel={true} />
+          <GrowthIndicator status={displayGrowth} size="sm" showLabel={true} />
         </>
       )}
       {siteConfig.posts.showReadingTime && (

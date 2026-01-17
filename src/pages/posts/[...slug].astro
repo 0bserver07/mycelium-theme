@@ -7,22 +7,35 @@
 
 import { getCollection, render } from 'astro:content';
 import PostLayout from '../../layouts/PostLayout.astro';
+import { calculateAllGrowth, getEffectiveGrowth } from '../../utils/growth';
+import { siteConfig } from '../../config';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => {
     return import.meta.env.PROD ? !data.draft : true;
   });
 
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post },
-  }));
+  // Calculate growth for all posts
+  const growthResults = calculateAllGrowth(posts);
+  const autoGrowth = siteConfig.garden.autoGrowth;
+
+  return posts.map((post) => {
+    const growthResult = growthResults.get(post.id);
+    const effectiveGrowth = growthResult
+      ? getEffectiveGrowth(growthResult, autoGrowth)
+      : post.data.growth;
+
+    return {
+      params: { slug: post.id },
+      props: { post, effectiveGrowth, growthMetrics: growthResult?.metrics },
+    };
+  });
 }
 
-const { post } = Astro.props;
+const { post, effectiveGrowth, growthMetrics } = Astro.props;
 const { Content, headings } = await render(post);
 ---
 
-<PostLayout post={post} headings={headings}>
+<PostLayout post={post} headings={headings} effectiveGrowth={effectiveGrowth} growthMetrics={growthMetrics}>
   <Content />
 </PostLayout>

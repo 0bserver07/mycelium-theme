@@ -18,8 +18,12 @@ const postsCollection = defineCollection({
     description: z.string().optional(),
     // Garden-specific fields
     growth: growthStatusEnum,
+    growthLocked: z.boolean().optional().default(false), // Lock to prevent auto-growth
     planted: z.coerce.date(),                    // When first created
     lastTended: z.coerce.date().optional(),      // Last updated
+    // Series support (for growth through connections)
+    series: z.string().optional(),               // Series name (e.g., "claude-code-guide")
+    seriesOrder: z.number().optional(),          // Position in series (1, 2, 3...)
     // Standard blog fields
     tags: z.array(z.string()).optional(),
     draft: z.boolean().optional().default(false),

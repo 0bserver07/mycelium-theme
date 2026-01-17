@@ -22,15 +22,20 @@ import LinkedMentions from '../components/LinkedMentions.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import Giscus from '../components/Giscus.astro';
 import { siteConfig } from '../config';
-import type { Post } from '../types';
+import type { Post, GrowthStatus } from '../types';
+import type { GrowthMetrics } from '../utils/growth';
 
 export interface Props {
   post: Post;
   headings?: Array<{ depth: number; slug: string; text: string }>;
+  effectiveGrowth?: GrowthStatus;
+  growthMetrics?: GrowthMetrics;
 }
 
-const { post, headings = [] } = Astro.props;
+const { post, headings = [], effectiveGrowth, growthMetrics } = Astro.props;
 const { title, description, growth, planted, lastTended, tags, image, imageAlt } = post.data;
+// Use effective growth if provided, otherwise fall back to manual growth
+const displayGrowth = effectiveGrowth || growth;
 
 // Format dates
 const plantedDate = planted.toLocaleDateString('en-US', {
@@ -63,7 +68,7 @@ const readingTime = Math.ceil(words / 200);
           <!-- Growth indicator and dates -->
           <div class="flex flex-wrap items-center gap-4 text-sm text-primary-600 dark:text-primary-400 mb-4">
             {siteConfig.garden.showGrowthStatus && (
-              <GrowthIndicator status={growth} showLabel />
+              <GrowthIndicator status={displayGrowth} showLabel />
             )}
 
             {siteConfig.garden.showPlantedDate && (
