@@ -25,15 +25,22 @@ export function remarkDropcap(options: DropCapOptions = {}) {
 
   return (tree: Root, file: any) => {
     // Check frontmatter for dropcap settings
-    const frontmatter = file.data?.astro?.frontmatter || {};
+    // Try multiple paths as Astro versions may differ
+    const frontmatter = file.data?.astro?.frontmatter
+      || file.data?.matter
+      || file.data?.frontmatter
+      || {};
+
+    // Get dropcap setting from frontmatter
+    const dropcapSetting = frontmatter.dropcap;
 
     // If dropcap is explicitly disabled in frontmatter, skip
-    if (frontmatter.dropcap === false) return;
+    if (dropcapSetting === false) return;
 
     // If dropcap is not enabled by default and not explicitly enabled, skip
-    if (!enabled && frontmatter.dropcap !== true && frontmatter.dropcap !== 'accent') return;
+    if (!enabled && dropcapSetting !== true && dropcapSetting !== 'accent') return;
 
-    const useAccent = frontmatter.dropcap === 'accent' || accent;
+    const useAccent = dropcapSetting === 'accent' || accent;
     let firstParagraphProcessed = false;
 
     visit(tree, 'paragraph', (node: Paragraph, index, parent) => {

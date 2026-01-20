@@ -12,6 +12,7 @@
  */
 
 import { visit } from 'unist-util-visit';
+import { toString } from 'mdast-util-to-string';
 import type { Root, Paragraph, Text, FootnoteReference, FootnoteDefinition } from 'mdast';
 
 interface SidenoteOptions {
@@ -43,17 +44,10 @@ export function remarkSidenotes(options: SidenoteOptions = {}) {
       sidenoteCounter++;
       const id = `sn-${sidenoteCounter}`;
 
-      // Get the content from the footnote definition
-      const content = definition.children
-        .map((child: any) => {
-          if (child.type === 'paragraph') {
-            return child.children
-              .map((c: any) => c.value || '')
-              .join('');
-          }
-          return '';
-        })
-        .join(' ');
+      // Get the content from the footnote definition using proper serialization
+      const content = toString(definition)
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
 
       // Replace the footnote reference with sidenote HTML
       const sidenoteHtml = {

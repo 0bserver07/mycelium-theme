@@ -1,7 +1,8 @@
 /**
  * Remark Collapsible Sections Plugin
  *
- * Transforms special syntax into collapsible <details>/<summary> elements
+ * Transforms :::collapsible container directives into <details>/<summary> elements
+ * Requires remark-directive to be loaded first
  *
  * Syntax:
  * :::collapsible[Title]
@@ -15,74 +16,74 @@
  */
 
 import { visit } from 'unist-util-visit';
-import type { Root, Paragraph, Text } from 'mdast';
+import type { Root } from 'mdast';
+
+interface DirectiveNode {
+  type: 'containerDirective' | 'leafDirective' | 'textDirective';
+  name: string;
+  attributes?: Record<string, string>;
+  children: any[];
+  data?: any;
+}
 
 export function remarkCollapsible() {
   return (tree: Root) => {
-    const nodesToProcess: Array<{ parent: any; startIndex: number; endIndex: number; title: string; open: boolean }> = [];
+    visit(tree, (node: any) => {
+      if (node.type !== 'containerDirective') return;
+      if (node.name !== 'collapsible') return;
 
-    // First pass: find collapsible markers
-    visit(tree, 'paragraph', (node: Paragraph, index, parent) => {
-      if (!parent || index === undefined) return;
+      const directive = node as DirectiveNode;
 
-      const firstChild = node.children[0];
-      if (!firstChild || firstChild.type !== 'text') return;
-
-      const text = firstChild.value;
-
-      // Check for opening marker: :::collapsible[Title] or :::collapsible{open}[Title]
-      const openMatch = text.match(/^:::collapsible(\{open\})?\[(.*?)\]\s*$/);
-      if (openMatch) {
-        const isOpen = !!openMatch[1];
-        const title = openMatch[2];
-
-        // Find the closing marker
-        for (let i = index + 1; i < parent.children.length; i++) {
-          const child = parent.children[i];
-          if (child.type === 'paragraph' && child.children[0]?.type === 'text') {
-            const childText = (child.children[0] as Text).value;
-            if (childText.trim() === ':::') {
-              nodesToProcess.push({
-                parent,
-                startIndex: index,
-                endIndex: i,
-                title,
-                open: isOpen,
-              });
-              break;
-            }
-          }
-        }
-      }
-    });
-
-    // Second pass: process found collapsibles (in reverse order to preserve indices)
-    nodesToProcess.reverse().forEach(({ parent, startIndex, endIndex, title, open }) => {
-      // Get content nodes between start and end
-      const contentNodes = parent.children.slice(startIndex + 1, endIndex);
-
-      // Create the details/summary HTML structure
-      const openAttr = open ? ' open' : '';
-      const detailsOpen = {
-        type: 'html',
-        value: `<details class="collapsible"${openAttr}><summary>${title}</summary><div class="collapsible-content">`,
-      };
-
-      const detailsClose = {
-        type: 'html',
-        value: `</div></details>`,
-      };
-
-      // Replace the markers and content with the new structure
-      parent.children.splice(
-        startIndex,
-        endIndex - startIndex + 1,
-        detailsOpen,
-        ...contentNodes,
-        detailsClose
+      // Get the title from the directive label (first child if it's a paragraph with directiveLabel)
+      let title = 'Details';
+      const labelNode = directive.children.find(
+        (child: any) => child.data?.directiveLabel === true
       );
+      if (labelNode && labelNode.children?.[0]?.value) {
+        title = labelNode.children[0].value;
+      }
+
+      // Check for open attribute
+      const isOpen = directive.attributes?.open !== undefined ||
+                     (directive.attributes && 'open' in directive.attributes);
+
+      // Set up the data for hast transformation
+      const data = directive.data || (directive.data = {});
+      const tagName = 'details';
+
+      data.hName = tagName;
+      data.hProperties = {
+        className: ['collapsible'],
+        ...(isOpen ? { open: true } : {}),
+      };
+
+      // Transform children: wrap in summary + content div
+      const contentChildren = directive.children.filter(
+        (child: any) => child.data?.directiveLabel !== true
+      );
+
+      // Replace children with summary + content structure
+      directive.children = [
+        {
+          type: 'html',
+          value: `<summary>${escapeHtml(title)}</summary><div class="collapsible-content">`,
+        },
+        ...contentChildren,
+        {
+          type: 'html',
+          value: `</div>`,
+        },
+      ];
     });
   };
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
 
 export default remarkCollapsible;

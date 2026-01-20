@@ -386,8 +386,9 @@
    LINK TYPE ICONS
    ============================================================================ */
 
-/* External link icon */
-a[href^="http"]:not([href*="example.com"]):not(.no-icon)::after {
+/* External link icon - applies to http/https links except localhost and same-origin */
+/* Note: Add your domain to the :not() selector or use .no-icon class to exclude */
+.prose-mycelium a[href^="http"]:not([href^="http://localhost"]):not([href^="https://localhost"]):not(.no-icon):not(.wikilink)::after {
   content: "";
   display: inline-block;
   width: 0.8em;
@@ -401,7 +402,7 @@ a[href^="http"]:not([href*="example.com"]):not(.no-icon)::after {
 }
 
 /* PDF link icon */
-a[href$=".pdf"]:not(.no-icon)::after {
+.prose-mycelium a[href$=".pdf"]:not(.no-icon)::after {
   content: "";
   display: inline-block;
   width: 0.9em;
@@ -415,7 +416,7 @@ a[href$=".pdf"]:not(.no-icon)::after {
 }
 
 /* Wikipedia link icon */
-a[href*="wikipedia.org"]:not(.no-icon)::after {
+.prose-mycelium a[href*="wikipedia.org"]:not(.no-icon)::after {
   content: "";
   display: inline-block;
   width: 0.9em;
@@ -429,7 +430,7 @@ a[href*="wikipedia.org"]:not(.no-icon)::after {
 }
 
 /* GitHub link icon */
-a[href*="github.com"]:not(.no-icon)::after {
+.prose-mycelium a[href*="github.com"]:not(.no-icon)::after {
   content: "";
   display: inline-block;
   width: 0.85em;
@@ -443,7 +444,7 @@ a[href*="github.com"]:not(.no-icon)::after {
 }
 
 /* Archive.org link icon */
-a[href*="archive.org"]:not(.no-icon)::after {
+.prose-mycelium a[href*="archive.org"]:not(.no-icon)::after {
   content: "";
   display: inline-block;
   width: 0.85em;

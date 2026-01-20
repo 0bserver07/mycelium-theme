@@ -49,17 +49,10 @@ This content is hidden by default. Perfect for:
 - Extended code examples
 - Supplementary information
 - Spoiler warnings
-
-The syntax is simple:
-```
-:::collapsible[Title]
-Your content here
-:::
-```
 :::
 
-:::collapsible{open}[This one starts open]
-You can have sections start expanded by adding `{open}` to the syntax.
+:::collapsible[This one demonstrates a second collapsible]
+Collapsible sections can be used multiple times on the same page!
 :::
 
 ## Confidence Ratings

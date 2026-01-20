@@ -29,13 +29,29 @@
     proseImages.forEach(img => {
       const image = img as HTMLImageElement;
 
-      // Skip small images (icons, emojis, etc.)
-      if (image.naturalWidth < 200 && image.naturalHeight < 200) return;
+      // Function to set up lightbox for this image
+      function setupLightbox() {
+        // Skip small images (icons, emojis, etc.) - check after load
+        if (image.naturalWidth > 0 && image.naturalWidth < 200 &&
+            image.naturalHeight > 0 && image.naturalHeight < 200) {
+          return;
+        }
 
-      // Add lightbox trigger class
-      image.classList.add('image-lightbox-trigger');
+        // Add lightbox trigger class
+        image.classList.add('image-lightbox-trigger');
+      }
+
+      // If image is already loaded, set up immediately
+      if (image.complete && image.naturalWidth > 0) {
+        setupLightbox();
+      } else {
+        // Wait for image to load
+        image.addEventListener('load', setupLightbox, { once: true });
+      }
 
       image.addEventListener('click', () => {
+        // Only trigger if this image has the trigger class
+        if (!image.classList.contains('image-lightbox-trigger')) return;
         // Set the lightbox image source
         lightboxImage.src = image.src;
         lightboxImage.alt = image.alt;

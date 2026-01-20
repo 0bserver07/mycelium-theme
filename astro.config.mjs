@@ -9,6 +9,7 @@ import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import remarkDirective from 'remark-directive';
 
 // Custom remark plugins
 import { remarkWikilinks } from './src/utils/remark-wikilinks.ts';
@@ -45,6 +46,7 @@ export default defineConfig({
       remarkHighlight,
       remarkMath,  // LaTeX math syntax
       remarkSidenotes,  // Convert footnotes to sidenotes (Gwern-style)
+      remarkDirective,  // Parse ::: directive syntax (must come before collapsible)
       remarkCollapsible,  // Collapsible sections with :::collapsible syntax
       [remarkDropcap, { enabled: false }],  // Drop caps (enable per-post with frontmatter)
     ],
