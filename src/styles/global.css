@@ -629,17 +629,18 @@ details.collapsible details.collapsible {
    ============================================================================ */
 
 .link-preview-popup {
-  @apply absolute z-50 hidden;
+  @apply absolute z-50;
   @apply w-80 max-w-[90vw];
   @apply bg-white dark:bg-primary-900;
   @apply border border-primary-200 dark:border-primary-700;
   @apply rounded-lg shadow-xl;
   @apply p-4;
-  @apply animate-scale-in;
+  @apply opacity-0 invisible pointer-events-none;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
 }
 
 .link-preview-popup.active {
-  @apply block;
+  @apply opacity-100 visible pointer-events-auto;
 }
 
 .link-preview-popup-title {
