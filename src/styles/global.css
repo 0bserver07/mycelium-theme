@@ -214,7 +214,7 @@
   }
 
   .prose-mycelium pre code {
-    @apply bg-transparent p-0;
+    @apply bg-transparent dark:bg-transparent p-0;
     @apply text-primary-100;
   }
 
