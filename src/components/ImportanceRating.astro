@@ -1,0 +1,46 @@
+---
+/**
+ * ImportanceRating Component
+ *
+ * Displays an importance/priority indicator for content (Gwern-style)
+ *
+ * Uses a star rating system (1-5 stars) or text labels
+ */
+
+export interface Props {
+  level: 1 | 2 | 3 | 4 | 5;
+  style?: 'stars' | 'text';
+}
+
+const { level, style = 'stars' } = Astro.props;
+
+const textLabels: Record<number, string> = {
+  1: 'Low importance',
+  2: 'Minor',
+  3: 'Moderate',
+  4: 'Important',
+  5: 'Essential reading',
+};
+
+const textClasses: Record<number, string> = {
+  1: 'importance-low',
+  2: 'importance-low',
+  3: 'importance-medium',
+  4: 'importance-high',
+  5: 'importance-high',
+};
+---
+
+{style === 'stars' ? (
+  <span class="importance-rating" title={textLabels[level]} aria-label={textLabels[level]}>
+    {[1, 2, 3, 4, 5].map(star => (
+      <span class={star <= level ? 'star star-filled' : 'star'}>
+        {star <= level ? '★' : '☆'}
+      </span>
+    ))}
+  </span>
+) : (
+  <span class={`importance-rating ${textClasses[level]}`} title={`Importance: ${level}/5`}>
+    {textLabels[level]}
+  </span>
+)}

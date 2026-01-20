@@ -1,0 +1,42 @@
+---
+/**
+ * ConfidenceRating Component
+ *
+ * Displays a confidence/certainty indicator for content (Gwern-style)
+ *
+ * Levels:
+ * - high: Very confident, well-researched
+ * - medium: Reasonably confident, some uncertainty
+ * - low: Uncertain, needs more research
+ * - speculative: Highly speculative, experimental thinking
+ */
+
+export interface Props {
+  level: 'high' | 'medium' | 'low' | 'speculative';
+  showLabel?: boolean;
+}
+
+const { level, showLabel = true } = Astro.props;
+
+const labels: Record<string, string> = {
+  high: 'High confidence',
+  medium: 'Medium confidence',
+  low: 'Low confidence',
+  speculative: 'Speculative',
+};
+
+const descriptions: Record<string, string> = {
+  high: 'Well-researched and verified',
+  medium: 'Reasonably confident with some uncertainty',
+  low: 'Uncertain, needs more research',
+  speculative: 'Experimental thinking, may be wrong',
+};
+---
+
+<span
+  class={`confidence-rating confidence-${level}`}
+  title={descriptions[level]}
+  aria-label={labels[level]}
+>
+  {showLabel && labels[level]}
+</span>

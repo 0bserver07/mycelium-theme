@@ -1,0 +1,158 @@
+---
+/**
+ * LinkPreview Component
+ *
+ * Provides hover preview popups for internal links (Gwern-style)
+ * Shows title, description, and growth status for linked posts
+ */
+
+import { getCollection } from 'astro:content';
+
+// Build a map of all posts for preview data
+const posts = await getCollection('posts');
+const projects = await getCollection('projects');
+
+const previewData: Record<string, { title: string; description?: string; type: string; growth?: string }> = {};
+
+posts.forEach(post => {
+  previewData[`/posts/${post.id}/`] = {
+    title: post.data.title,
+    description: post.data.description,
+    type: 'post',
+    growth: post.data.growth,
+  };
+  // Also add without trailing slash
+  previewData[`/posts/${post.id}`] = previewData[`/posts/${post.id}/`];
+});
+
+projects.forEach(project => {
+  previewData[`/projects/${project.id}/`] = {
+    title: project.data.title,
+    description: project.data.description,
+    type: 'project',
+  };
+  previewData[`/projects/${project.id}`] = previewData[`/projects/${project.id}/`];
+});
+---
+
+<!-- Link Preview Container (hidden, populated via JS) -->
+<div id="link-preview-container" class="link-preview-popup">
+  <div class="link-preview-popup-title"></div>
+  <div class="link-preview-popup-content"></div>
+  <div class="link-preview-popup-meta"></div>
+</div>
+
+<script define:vars={{ previewData }}>
+  // Store preview data globally
+  window.__linkPreviewData = previewData;
+</script>
+
+<script>
+  function initLinkPreviews() {
+    const container = document.getElementById('link-preview-container');
+    if (!container) return;
+
+    const previewData = (window as any).__linkPreviewData || {};
+    let hideTimeout: number | null = null;
+    let currentLink: HTMLAnchorElement | null = null;
+
+    // Find all internal links (wikilinks and regular internal links)
+    const internalLinks = document.querySelectorAll('a.wikilink, a[href^="/posts/"], a[href^="/projects/"]');
+
+    internalLinks.forEach(link => {
+      const anchor = link as HTMLAnchorElement;
+      const href = anchor.getAttribute('href');
+      if (!href) return;
+
+      // Normalize the href
+      const normalizedHref = href.endsWith('/') ? href : href + '/';
+      const data = previewData[normalizedHref] || previewData[href];
+
+      if (!data) return;
+
+      anchor.addEventListener('mouseenter', (e) => {
+        if (hideTimeout) {
+          clearTimeout(hideTimeout);
+          hideTimeout = null;
+        }
+
+        currentLink = anchor;
+
+        // Populate preview content
+        const titleEl = container.querySelector('.link-preview-popup-title');
+        const contentEl = container.querySelector('.link-preview-popup-content');
+        const metaEl = container.querySelector('.link-preview-popup-meta');
+
+        if (titleEl) titleEl.textContent = data.title;
+        if (contentEl) contentEl.textContent = data.description || 'No description available.';
+        if (metaEl) {
+          const typeLabel = data.type === 'post' ? '📝 Post' : '🚀 Project';
+          const growthLabel = data.growth ? ` · ${data.growth}` : '';
+          metaEl.textContent = typeLabel + growthLabel;
+        }
+
+        // Position the popup
+        const rect = anchor.getBoundingClientRect();
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+
+        // Check if there's room above or below
+        const spaceAbove = rect.top;
+        const spaceBelow = window.innerHeight - rect.bottom;
+
+        container.classList.remove('popup-above', 'popup-below');
+
+        if (spaceBelow > 200 || spaceBelow > spaceAbove) {
+          // Position below
+          container.style.top = `${rect.bottom + scrollTop + 10}px`;
+          container.classList.add('popup-below');
+        } else {
+          // Position above
+          container.style.top = `${rect.top + scrollTop - container.offsetHeight - 10}px`;
+          container.classList.add('popup-above');
+        }
+
+        // Center horizontally relative to the link
+        const linkCenter = rect.left + rect.width / 2 + scrollLeft;
+        const popupWidth = 320; // Approximate width
+        let left = linkCenter - popupWidth / 2;
+
+        // Keep within viewport
+        const viewportWidth = window.innerWidth;
+        if (left < 10) left = 10;
+        if (left + popupWidth > viewportWidth - 10) left = viewportWidth - popupWidth - 10;
+
+        container.style.left = `${left}px`;
+
+        // Show the popup
+        container.classList.add('active');
+      });
+
+      anchor.addEventListener('mouseleave', () => {
+        hideTimeout = window.setTimeout(() => {
+          if (currentLink === anchor) {
+            container.classList.remove('active');
+            currentLink = null;
+          }
+        }, 200);
+      });
+    });
+
+    // Keep popup visible when hovering over it
+    container.addEventListener('mouseenter', () => {
+      if (hideTimeout) {
+        clearTimeout(hideTimeout);
+        hideTimeout = null;
+      }
+    });
+
+    container.addEventListener('mouseleave', () => {
+      container.classList.remove('active');
+      currentLink = null;
+    });
+  }
+
+  // Initialize on page load and Astro navigation
+  document.addEventListener('DOMContentLoaded', initLinkPreviews);
+  document.addEventListener('astro:page-load', initLinkPreviews);
+</script>

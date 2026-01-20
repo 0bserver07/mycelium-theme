@@ -39,6 +39,12 @@ export interface MyceliumConfig {
     tableOfContents: boolean;
     comments: boolean;
     rss: boolean;
+    // Gwern-style features
+    sidenotes: boolean;
+    linkPreviews: boolean;
+    linkTypeIcons: boolean;
+    dropCaps: boolean;
+    imageLightbox: boolean;
   };
 
   // Garden-specific settings
@@ -141,6 +147,12 @@ export const siteConfig: MyceliumConfig = {
     tableOfContents: true,
     comments: false, // Enable when you configure Giscus
     rss: true,
+    // Gwern-style features
+    sidenotes: true,        // Convert footnotes to margin notes
+    linkPreviews: true,     // Hover preview popups for internal links
+    linkTypeIcons: true,    // Icons for PDF, external, wiki links
+    dropCaps: false,        // Decorative first letter (enable per-post)
+    imageLightbox: true,    // Click-to-zoom for images
   },
 
   // Garden settings

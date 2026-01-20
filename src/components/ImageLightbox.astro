@@ -1,0 +1,83 @@
+---
+/**
+ * ImageLightbox Component
+ *
+ * Provides click-to-zoom functionality for standalone images (not in galleries)
+ * Similar to Gwern's image zoom behavior
+ */
+---
+
+<!-- Image Lightbox Overlay -->
+<div id="image-lightbox" class="image-lightbox">
+  <button class="image-lightbox-close" aria-label="Close lightbox">&times;</button>
+  <img id="lightbox-image" src="" alt="" />
+  <div id="lightbox-caption" class="image-lightbox-caption hidden"></div>
+</div>
+
+<script>
+  function initImageLightbox() {
+    const lightbox = document.getElementById('image-lightbox');
+    const lightboxImage = document.getElementById('lightbox-image') as HTMLImageElement;
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const closeBtn = lightbox?.querySelector('.image-lightbox-close');
+
+    if (!lightbox || !lightboxImage || !lightboxCaption) return;
+
+    // Find all images in prose content that are not already in galleries
+    const proseImages = document.querySelectorAll('.prose-mycelium img:not([data-gallery-image])');
+
+    proseImages.forEach(img => {
+      const image = img as HTMLImageElement;
+
+      // Skip small images (icons, emojis, etc.)
+      if (image.naturalWidth < 200 && image.naturalHeight < 200) return;
+
+      // Add lightbox trigger class
+      image.classList.add('image-lightbox-trigger');
+
+      image.addEventListener('click', () => {
+        // Set the lightbox image source
+        lightboxImage.src = image.src;
+        lightboxImage.alt = image.alt;
+
+        // Check for caption (figure > figcaption or alt text)
+        const figure = image.closest('figure');
+        const figcaption = figure?.querySelector('figcaption');
+        const caption = figcaption?.textContent || image.alt;
+
+        if (caption && caption.trim()) {
+          lightboxCaption.textContent = caption;
+          lightboxCaption.classList.remove('hidden');
+        } else {
+          lightboxCaption.classList.add('hidden');
+        }
+
+        // Show lightbox
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    // Close lightbox handlers
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    closeBtn?.addEventListener('click', closeLightbox);
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+    });
+  }
+
+  // Initialize on page load and Astro navigation
+  document.addEventListener('DOMContentLoaded', initImageLightbox);
+  document.addEventListener('astro:page-load', initImageLightbox);
+</script>

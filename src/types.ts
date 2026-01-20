@@ -13,6 +13,12 @@ export type Doc = CollectionEntry<'docs'>;
 // Growth status for digital garden
 export type GrowthStatus = 'seedling' | 'budding' | 'evergreen';
 
+// Confidence level (Gwern-style)
+export type ConfidenceLevel = 'high' | 'medium' | 'low' | 'speculative';
+
+// Importance level (1-5 stars)
+export type ImportanceLevel = 1 | 2 | 3 | 4 | 5;
+
 // Wikilink match for link extraction
 export interface WikilinkMatch {
   link: string;

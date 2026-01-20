@@ -10,6 +10,12 @@ import { glob } from 'astro/loaders';
 // Growth status enum for digital garden content
 const growthStatusEnum = z.enum(['seedling', 'budding', 'evergreen']).default('seedling');
 
+// Confidence level enum (Gwern-style)
+const confidenceEnum = z.enum(['high', 'medium', 'low', 'speculative']).optional();
+
+// Importance level (1-5 stars)
+const importanceLevel = z.number().min(1).max(5).optional();
+
 // Posts Collection - Main blog/garden content
 const postsCollection = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/posts' }),
@@ -32,6 +38,10 @@ const postsCollection = defineCollection({
     imageAlt: z.string().optional(),
     // SEO
     noIndex: z.boolean().optional(),
+    // Gwern-style metadata
+    confidence: confidenceEnum,           // How confident are you in this content?
+    importance: importanceLevel,          // How important is this (1-5 stars)?
+    dropcap: z.union([z.boolean(), z.literal('accent')]).optional(), // Enable drop cap
   }),
 });
 

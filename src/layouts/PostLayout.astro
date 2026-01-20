@@ -21,6 +21,10 @@ import LocalGraph from '../components/LocalGraph.astro';
 import LinkedMentions from '../components/LinkedMentions.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import Giscus from '../components/Giscus.astro';
+import LinkPreview from '../components/LinkPreview.astro';
+import ImageLightbox from '../components/ImageLightbox.astro';
+import ConfidenceRating from '../components/ConfidenceRating.astro';
+import ImportanceRating from '../components/ImportanceRating.astro';
 import { siteConfig } from '../config';
 import type { Post, GrowthStatus } from '../types';
 import type { GrowthMetrics } from '../utils/growth';
@@ -33,7 +37,7 @@ export interface Props {
 }
 
 const { post, headings = [], effectiveGrowth, growthMetrics } = Astro.props;
-const { title, description, growth, planted, lastTended, tags, image, imageAlt } = post.data;
+const { title, description, growth, planted, lastTended, tags, image, imageAlt, confidence, importance } = post.data;
 // Use effective growth if provided, otherwise fall back to manual growth
 const displayGrowth = effectiveGrowth || growth;
 
@@ -99,6 +103,14 @@ const readingTime = Math.ceil(words / 200);
                 </svg>
                 {readingTime} min read
               </span>
+            )}
+
+            {confidence && (
+              <ConfidenceRating level={confidence} />
+            )}
+
+            {importance && (
+              <ImportanceRating level={importance} />
             )}
           </div>
 
@@ -166,6 +178,10 @@ const readingTime = Math.ceil(words / 200);
   </div>
 
   <Footer slot="footer" />
+
+  <!-- Gwern-style features -->
+  {siteConfig.features.linkPreviews && <LinkPreview />}
+  {siteConfig.features.imageLightbox && <ImageLightbox />}
 </BaseLayout>
 
 <!-- Twitter Widget Script for embedded tweets -->

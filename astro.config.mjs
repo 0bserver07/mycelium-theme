@@ -18,6 +18,9 @@ import { remarkEmbeds } from './src/utils/remark-embeds.ts';
 import { remarkMediaEmbeds } from './src/utils/remark-media-embeds.ts';
 import { remarkMermaid } from './src/utils/remark-mermaid.ts';
 import { remarkGallery } from './src/utils/remark-gallery.ts';
+import { remarkSidenotes } from './src/utils/remark-sidenotes.ts';
+import { remarkDropcap } from './src/utils/remark-dropcap.ts';
+import { remarkCollapsible } from './src/utils/remark-collapsible.ts';
 
 // https://astro.build/config
 export default defineConfig({
@@ -41,6 +44,9 @@ export default defineConfig({
       remarkCallouts,
       remarkHighlight,
       remarkMath,  // LaTeX math syntax
+      remarkSidenotes,  // Convert footnotes to sidenotes (Gwern-style)
+      remarkCollapsible,  // Collapsible sections with :::collapsible syntax
+      [remarkDropcap, { enabled: false }],  // Drop caps (enable per-post with frontmatter)
     ],
     rehypePlugins: [
       rehypeSlug,
