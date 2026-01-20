@@ -77,16 +77,30 @@ The importance rating (also in the header) uses a 5-star system:
 
 ## Image Lightbox
 
-Click any image in your posts to zoom in! The lightbox provides:
+Click any image in your posts to zoom in! Try clicking the image below:
+
+![A sample image demonstrating the lightbox feature](https://picsum.photos/800/400)
+
+The lightbox provides:
 
 - Full-screen view
 - Caption display (from alt text or figcaption)
 - Keyboard navigation (Escape to close)
 - Click outside to dismiss
 
+Here's another image to test:
+
+![Mountain landscape](https://picsum.photos/600/300)
+
 ## Link Preview Popups
 
-Hover over any internal link (like [[sample-post]]) to see a preview popup showing:
+Hover over any internal link to see a preview popup. Try these links:
+
+- [[digital-garden-philosophy]] - hover to see the preview
+- [[building-with-astro]] - another example
+- [[knowledge-management]] - and one more
+
+The popup shows:
 
 - The linked page's title
 - Description excerpt
