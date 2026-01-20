@@ -343,3 +343,20 @@ const readingTime = Math.ceil(words / 200);
   document.addEventListener('DOMContentLoaded', initGalleries);
   document.addEventListener('astro:page-load', initGalleries);
 </script>
+
+<!-- External links open in new tab -->
+<script>
+  function initExternalLinks() {
+    const proseLinks = document.querySelectorAll('.prose-mycelium a[href^="http"]');
+    proseLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      // Skip localhost links
+      if (href?.includes('localhost')) return;
+      // Add target and rel attributes
+      link.setAttribute('target', '_blank');
+      link.setAttribute('rel', 'noopener noreferrer');
+    });
+  }
+  document.addEventListener('DOMContentLoaded', initExternalLinks);
+  document.addEventListener('astro:page-load', initExternalLinks);
+</script>
