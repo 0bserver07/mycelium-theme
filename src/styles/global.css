@@ -218,6 +218,15 @@
     @apply text-primary-100;
   }
 
+  /* Prevent any background colors on code block content - let Shiki handle it */
+  .prose-mycelium pre code *,
+  .prose-mycelium pre code span,
+  .prose-mycelium pre .line,
+  .prose-mycelium pre .line * {
+    background: none !important;
+    background-color: transparent !important;
+  }
+
   /* Links in prose */
   .prose-mycelium a {
     @apply text-accent-600 dark:text-accent-400;
