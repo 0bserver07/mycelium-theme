@@ -8,17 +8,17 @@
 ---
 
 <!-- Image Lightbox Overlay -->
-<div id="image-lightbox" class="image-lightbox">
+<div id="lightbox-overlay" class="image-lightbox">
   <button class="image-lightbox-close" aria-label="Close lightbox">&times;</button>
-  <img id="lightbox-image" src="" alt="" />
-  <div id="lightbox-caption" class="image-lightbox-caption hidden"></div>
+  <img id="lightbox-img" src="" alt="" />
+  <div id="lightbox-cap" class="image-lightbox-caption hidden"></div>
 </div>
 
 <script>
   function initImageLightbox() {
-    const lightbox = document.getElementById('image-lightbox');
-    const lightboxImage = document.getElementById('lightbox-image') as HTMLImageElement;
-    const lightboxCaption = document.getElementById('lightbox-caption');
+    const lightbox = document.getElementById('lightbox-overlay');
+    const lightboxImage = document.getElementById('lightbox-img') as HTMLImageElement;
+    const lightboxCaption = document.getElementById('lightbox-cap');
     const closeBtn = lightbox?.querySelector('.image-lightbox-close');
 
     if (!lightbox || !lightboxImage || !lightboxCaption) return;
