@@ -330,7 +330,7 @@
   margin-right: 0.3em;
 }
 
-/* Desktop: show in margin */
+/* Desktop: show in margin on hover */
 @media (min-width: 1280px) {
   .sidenote-right {
     position: absolute;
@@ -338,6 +338,9 @@
     width: 250px;
     top: 0;
     margin-top: -0.5em;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
   }
 
   .sidenote-left {
@@ -346,6 +349,16 @@
     width: 250px;
     top: 0;
     margin-top: -0.5em;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+
+  /* Show on hover over the number or the sidenote itself */
+  .sidenote-wrapper:hover .sidenote,
+  .sidenote-toggle:focus + .sidenote-checkbox + .sidenote {
+    opacity: 1;
+    visibility: visible;
   }
 }
 
