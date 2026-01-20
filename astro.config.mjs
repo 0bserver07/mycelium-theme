@@ -56,7 +56,7 @@ export default defineConfig({
       rehypeKatex,  // Render math with KaTeX
     ],
     shikiConfig: {
-      theme: 'github-dark',
+      theme: 'min-dark',
       wrap: true,
     },
   },
