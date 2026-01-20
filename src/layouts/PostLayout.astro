@@ -157,7 +157,7 @@ const readingTime = Math.ceil(words / 200);
 
       <!-- Sidebar -->
       <aside class="hidden lg:block">
-        <div class="sticky top-24 space-y-6">
+        <div class="sticky top-24 space-y-6 max-h-[calc(100vh-8rem)] overflow-y-auto">
           <!-- Table of Contents -->
           {siteConfig.features.tableOfContents && headings.length > 0 && (
             <TableOfContents headings={headings} />
