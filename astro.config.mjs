@@ -56,7 +56,7 @@ export default defineConfig({
       rehypeKatex,  // Render math with KaTeX
     ],
     shikiConfig: {
-      theme: 'github-dark',
+      theme: 'vitesse-dark',  // Clean theme without background highlights on comments
       wrap: true,
     },
   },
