@@ -1,0 +1,99 @@
+---
+// CodeCopyButton - Adds copy buttons to all code blocks
+// Include this component in layouts where you want copy functionality
+---
+
+<script>
+  function initCopyButtons() {
+    const codeBlocks = document.querySelectorAll('pre');
+
+    codeBlocks.forEach((pre) => {
+      // Skip if already has a copy button
+      if (pre.querySelector('.copy-code-btn')) return;
+
+      // Make pre position relative for absolute button positioning
+      pre.style.position = 'relative';
+
+      const button = document.createElement('button');
+      button.className = 'copy-code-btn';
+      button.setAttribute('aria-label', 'Copy code');
+      button.innerHTML = `
+        <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <svg class="check-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      `;
+
+      button.addEventListener('click', async () => {
+        const code = pre.querySelector('code');
+        const text = code?.textContent || pre.textContent || '';
+
+        try {
+          await navigator.clipboard.writeText(text);
+          button.classList.add('copied');
+          setTimeout(() => button.classList.remove('copied'), 2000);
+        } catch (err) {
+          console.error('Failed to copy:', err);
+        }
+      });
+
+      pre.appendChild(button);
+    });
+  }
+
+  // Run on initial load
+  initCopyButtons();
+
+  // Re-run after Astro page transitions (View Transitions)
+  document.addEventListener('astro:after-swap', initCopyButtons);
+</script>
+
+<style is:global>
+  .copy-code-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.375rem;
+    border-radius: 0.375rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s, background 0.2s, color 0.2s;
+    z-index: 10;
+  }
+
+  pre:hover .copy-code-btn {
+    opacity: 1;
+  }
+
+  .copy-code-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .copy-code-btn .check-icon {
+    display: none;
+  }
+
+  .copy-code-btn .copy-icon {
+    display: block;
+  }
+
+  .copy-code-btn.copied .check-icon {
+    display: block;
+    color: #4ade80;
+  }
+
+  .copy-code-btn.copied .copy-icon {
+    display: none;
+  }
+
+  .copy-code-btn.copied {
+    opacity: 1;
+  }
+</style>

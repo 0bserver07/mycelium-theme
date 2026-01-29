@@ -23,6 +23,7 @@ import TableOfContents from '../components/TableOfContents.astro';
 import Giscus from '../components/Giscus.astro';
 import LinkPreview from '../components/LinkPreview.astro';
 import ImageLightbox from '../components/ImageLightbox.astro';
+import CodeCopyButton from '../components/CodeCopyButton.astro';
 import ConfidenceRating from '../components/ConfidenceRating.astro';
 import ImportanceRating from '../components/ImportanceRating.astro';
 import { siteConfig } from '../config';
@@ -182,6 +183,7 @@ const jsonLd = {
         <div class="prose-mycelium">
           <slot />
         </div>
+        <CodeCopyButton />
 
         <!-- Backlinks section -->
         <LinkedMentions currentSlug={post.id} />
