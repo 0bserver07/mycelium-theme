@@ -58,9 +58,44 @@ const tendedDate = lastTended?.toLocaleDateString('en-US', {
 const content = post.body || '';
 const words = content.split(/\s+/).length;
 const readingTime = Math.ceil(words / 200);
+
+// Build canonical URL
+const canonicalUrl = new URL(`/posts/${post.id}`, Astro.site);
+const ogImage = image ? new URL(image, Astro.site) : undefined;
+
+// JSON-LD structured data for SEO
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": title,
+  "description": description || "",
+  "author": {
+    "@type": "Person",
+    "name": siteConfig.gardener,
+    "url": Astro.site
+  },
+  "datePublished": planted.toISOString(),
+  "dateModified": lastTended?.toISOString() || planted.toISOString(),
+  "url": canonicalUrl.toString(),
+  "wordCount": words,
+  "timeRequired": `PT${readingTime}M`,
+  ...(ogImage && { "image": ogImage.toString() }),
+  ...(tags && tags.length > 0 && { "keywords": tags.join(", ") }),
+  "publisher": {
+    "@type": "Person",
+    "name": siteConfig.gardener,
+    "url": Astro.site
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonicalUrl.toString()
+  }
+};
 ---
 
 <BaseLayout title={title} description={description} image={image}>
+  <!-- JSON-LD structured data -->
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   <Header slot="header" />
 
   <div class="max-w-5xl mx-auto px-4 py-8 sm:py-12">

@@ -31,7 +31,10 @@ const {
 
 const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
-const ogImage = image ? new URL(image, Astro.site) : undefined;
+// Use post image if provided, otherwise fall back to default OG image
+const ogImage = image
+  ? new URL(image, Astro.site)
+  : new URL('/og-default.png', Astro.site);
 ---
 
 <!doctype html>
@@ -91,6 +94,9 @@ const ogImage = image ? new URL(image, Astro.site) : undefined;
         }
       })();
     </script>
+
+    <!-- Slot for page-specific head content (JSON-LD, etc.) -->
+    <slot name="head" />
   </head>
   <body class="min-h-screen flex flex-col">
     <slot name="header" />
