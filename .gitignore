@@ -22,3 +22,10 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Obsidian workspace (device-specific, not shareable)
+**/.obsidian/workspace.json
+**/.obsidian/workspace-mobile.json
+
+# Claude Code local/personal files (keep project context, ignore personal notes)
+.claude/*.local.md

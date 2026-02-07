@@ -20,6 +20,25 @@ const ROOT = join(__dirname, '..');
 const POSTS_DIR = join(ROOT, 'src/content/posts');
 const OUTPUT_DIR = join(ROOT, 'public/og/posts');
 
+/**
+ * Read site branding from src/config.ts
+ * Extracts the site URL and derives the domain name for OG images
+ */
+async function getSiteBranding() {
+  try {
+    const configContent = await readFile(join(ROOT, 'src/config.ts'), 'utf-8');
+    // Try site URL first (extract domain)
+    const siteMatch = configContent.match(/site:\s*['"]https?:\/\/([^'"]+)['"]/);
+    if (siteMatch) return siteMatch[1].replace(/\/$/, '');
+    // Fallback to site name
+    const nameMatch = configContent.match(/name:\s*['"]([^'"]+)['"]/);
+    if (nameMatch) return nameMatch[1];
+  } catch {
+    // ignore read errors
+  }
+  return 'My Digital Garden';
+}
+
 // OG image dimensions
 const WIDTH = 1200;
 const HEIGHT = 630;
@@ -64,7 +83,7 @@ function splitTitle(title, maxCharsPerLine = 30) {
 /**
  * Generate OG image SVG using satori
  */
-async function generateOgImage(title, font) {
+async function generateOgImage(title, font, siteBranding) {
   const lines = splitTitle(title, 28);
   const fontSize = lines.length > 2 ? 42 : 52;
 
@@ -116,7 +135,7 @@ async function generateOgImage(title, font) {
                 fontSize: '24px',
                 marginTop: '40px',
               },
-              children: 'yad.codes',
+              children: siteBranding,
             },
           },
         ],
@@ -179,8 +198,9 @@ async function main() {
     await mkdir(OUTPUT_DIR, { recursive: true });
   }
 
-  // Load font
+  // Load font and site branding
   const font = await loadFont();
+  const siteBranding = await getSiteBranding();
 
   // Get all markdown files
   const files = (await readdir(POSTS_DIR)).filter((f) => f.endsWith('.md'));
@@ -211,7 +231,7 @@ async function main() {
 
     // Generate OG image
     console.log(`  Generating: ${slug}`);
-    const svg = await generateOgImage(title, font);
+    const svg = await generateOgImage(title, font, siteBranding);
     const png = svgToPng(svg);
     await writeFile(outputPath, png);
     generated++;

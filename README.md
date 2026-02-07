@@ -179,15 +179,6 @@ Content with `draft: true` in frontmatter:
 
 Sample posts ship as drafts. Create your own content and set `draft: false` to publish.
 
-## .gitignore
-
-Add to your `.gitignore`:
-```
-# Obsidian workspace (device-specific)
-**/.obsidian/workspace.json
-**/.obsidian/workspace-mobile.json
-```
-
 ## Troubleshooting
 
 ### "No plugins found" in Obsidian
@@ -214,6 +205,14 @@ git commit -m "Resolve merge conflicts, accept upstream theme"
 - [D3.js](https://d3js.org) - Graph visualization
 - [Obsidian](https://obsidian.md) - Content authoring
 
+## Using with Claude Code
+
+The `.claude/CLAUDE.md` file provides project context for Claude Code users. Place personal files (writing guides, content plans) in `.claude/` with a `.local.md` extension to keep them gitignored.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
 ## License
 
-MIT License
+[MIT License](LICENSE)
