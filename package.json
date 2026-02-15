@@ -2,6 +2,22 @@
   "name": "mycelium-theme",
   "type": "module",
   "version": "1.0.0",
+  "description": "Digital garden theme for Astro + Obsidian",
+  "author": "Yad Konrad",
+  "license": "MIT",
+  "homepage": "https://github.com/0bserver07/mycelium-theme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0bserver07/mycelium-theme.git"
+  },
+  "keywords": [
+    "astro",
+    "obsidian",
+    "digital-garden",
+    "theme",
+    "blog",
+    "wikilinks"
+  ],
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
