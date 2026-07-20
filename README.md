@@ -16,9 +16,9 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Astro-5-BC52EE?logo=astro&logoColor=white" alt="Astro 5">
+  <img src="https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white" alt="Astro 7">
   <img src="https://img.shields.io/badge/Obsidian-Plugin_Ready-7C3AED?logo=obsidian&logoColor=white" alt="Obsidian">
-  <img src="https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white" alt="Tailwind CSS">
   <img src="https://img.shields.io/github/license/0bserver07/mycelium-theme" alt="License">
 </p>
 
@@ -48,6 +48,8 @@ On the Astro side: wikilink support with anchors, callout blocks, D3 graph visua
 Four content types: posts, pages, projects, docs.
 
 ## Quick Start
+
+Requires **Node 22.12+** (Astro 7).
 
 ```bash
 git clone https://github.com/0bserver07/mycelium-theme my-garden
@@ -121,7 +123,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - run: npm ci
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
@@ -242,11 +244,26 @@ Theme updates merge cleanly because you don't edit theme files. Content conflict
 
 ## Draft Content
 
-Content with `draft: true` in frontmatter:
-- **Dev mode** (`npm run dev`): Visible -- so you can preview while writing
-- **Production** (`npm run build`): Hidden -- won't be published
+Two ways to keep work-in-progress out of production, depending on whether it
+lives in your garden yet.
 
-Sample posts ship as drafts. Create your own content and set `draft: false` to publish.
+**In-vault drafts** -- a post in `src/content/posts/` with `draft: true` in its
+frontmatter:
+- **Dev** (`npm run dev`): visible, so you can preview while writing
+- **Production** (`npm run build`): hidden -- not published
+
+**Out-of-vault drafts** -- Markdown in the top-level `drafts/` folder, kept
+entirely outside the Obsidian vault (so it never touches backlinks, the graph,
+or search):
+- Preview at **`/drafts-preview`** (index) or **`/drafts-preview/<file>`** while
+  running `npm run dev` -- rendered through the real `PostLayout`, so a draft
+  looks exactly like a published post.
+- Emits **nothing** in `npm run build`: no HTML, no sitemap entry, no OG image.
+  The preview route returns an empty path list in production.
+- Promote when ready: `git mv drafts/my-post.md src/content/posts/`.
+
+See `drafts/README.md` for details. Relocate the folder by changing `DRAFTS_DIR`
+in `src/content.config.ts`.
 
 ## Troubleshooting
 
