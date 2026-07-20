@@ -160,7 +160,6 @@ const allTags = [...new Set(allPostsSorted.flatMap((post) => post.data.tags || [
     <!-- Posts -->
     {allPostsSorted.length > 0 ? (
       <>
-        <!-- Grid Layout -->
         <div id="posts-grid" data-view="grid" class:list={["grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12", layout === 'list' && "hidden"]}>
           {allPostsSorted.map((post) => (
             <div class="post-card h-full" data-growth={getPostGrowth(post)} data-tags={JSON.stringify(post.data.tags || [])}>
@@ -168,7 +167,6 @@ const allTags = [...new Set(allPostsSorted.flatMap((post) => post.data.tags || [
             </div>
           ))}
         </div>
-        <!-- List Layout -->
         <div id="posts-list" data-view="list" class:list={["divide-y divide-primary-100 dark:divide-primary-800 mb-12", layout === 'grid' && "hidden"]}>
           {allPostsSorted.map((post) => (
             <div class="post-card" data-growth={getPostGrowth(post)} data-tags={JSON.stringify(post.data.tags || [])}>

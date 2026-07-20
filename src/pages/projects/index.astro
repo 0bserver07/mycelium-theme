@@ -46,7 +46,6 @@ const defaultLayout = 'grid';
 
     {projects.length > 0 ? (
       <>
-        <!-- Grid Layout -->
         <div data-view="grid" class={defaultLayout === 'list' ? 'hidden' : ''}>
           {featuredProjects.length > 0 && (
             <section class="mb-12">
@@ -71,7 +70,6 @@ const defaultLayout = 'grid';
           )}
         </div>
 
-        <!-- List Layout -->
         <div data-view="list" class={defaultLayout === 'grid' ? 'hidden' : ''}>
           {featuredProjects.length > 0 && (
             <section class="mb-8">
