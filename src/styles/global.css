@@ -77,29 +77,36 @@
   }
 }
 
-@utility callout {
-  /* Callout blocks */
-  @apply p-4 rounded-lg border-l-4 my-4;
-}
+/* Callout variants are applied dynamically by remark-callouts.ts as
+   `callout-${type}`, so the class names never appear literally in scanned
+   source. Authoring them as plain component rules (rather than @utility, which
+   Tailwind v4 only emits on-demand when it sees the class in source) guarantees
+   the variants are always generated instead of being tree-shaken away. */
+@layer components {
+  .callout {
+    /* Callout blocks */
+    @apply p-4 rounded-lg border-l-4 my-4;
+  }
 
-@utility callout-note {
-  @apply bg-blue-50 border-blue-500 dark:bg-blue-950/50 dark:border-blue-400;
-}
+  .callout-note {
+    @apply bg-blue-50 border-blue-500 dark:bg-blue-950/50 dark:border-blue-400;
+  }
 
-@utility callout-tip {
-  @apply bg-green-50 border-green-500 dark:bg-green-950/50 dark:border-green-400;
-}
+  .callout-tip {
+    @apply bg-green-50 border-green-500 dark:bg-green-950/50 dark:border-green-400;
+  }
 
-@utility callout-warning {
-  @apply bg-amber-50 border-amber-500 dark:bg-amber-950/50 dark:border-amber-400;
-}
+  .callout-warning {
+    @apply bg-amber-50 border-amber-500 dark:bg-amber-950/50 dark:border-amber-400;
+  }
 
-@utility callout-danger {
-  @apply bg-red-50 border-red-500 dark:bg-red-950/50 dark:border-red-400;
-}
+  .callout-danger {
+    @apply bg-red-50 border-red-500 dark:bg-red-950/50 dark:border-red-400;
+  }
 
-@utility callout-info {
-  @apply bg-purple-50 border-purple-500 dark:bg-purple-950/50 dark:border-purple-400;
+  .callout-info {
+    @apply bg-purple-50 border-purple-500 dark:bg-purple-950/50 dark:border-purple-400;
+  }
 }
 
 @utility card {
