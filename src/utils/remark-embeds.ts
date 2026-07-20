@@ -35,7 +35,7 @@ export const remarkEmbeds: Plugin<[], Root> = () => {
         value: `
 <div class="embed-card my-4 p-4 border border-primary-200 dark:border-primary-700 rounded-lg bg-primary-50 dark:bg-primary-900/50 hover:border-accent-400 dark:hover:border-accent-600 transition-colors">
   <a href="${url}" class="flex items-center gap-3 no-underline">
-    <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-primary-200 dark:bg-primary-800 rounded-lg">
+    <div class="shrink-0 w-10 h-10 flex items-center justify-center bg-primary-200 dark:bg-primary-800 rounded-lg">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary-600 dark:text-primary-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
         <polyline points="14 2 14 8 20 8"/>

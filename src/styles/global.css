@@ -5,68 +5,260 @@
  */
 
 /* Import fonts - must come before @tailwind directives */
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/500.css';
-@import '@fontsource/inter/600.css';
-@import '@fontsource/inter/700.css';
-@import '@fontsource/jetbrains-mono/400.css';
-@import '@fontsource/jetbrains-mono/500.css';
+@import '@fontsource/inter/400.css' layer(base);
+@import '@fontsource/inter/500.css' layer(base);
+@import '@fontsource/inter/600.css' layer(base);
+@import '@fontsource/inter/700.css' layer(base);
+@import '@fontsource/jetbrains-mono/400.css' layer(base);
+@import '@fontsource/jetbrains-mono/500.css' layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@config '../../tailwind.config.mjs';
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 /* ============================================================================
+   COMPONENT STYLES
+   ============================================================================ */
+
+@utility wikilink {
+  /* Wikilinks (internal links) */
+  @apply text-accent-600 dark:text-accent-400;
+  @apply underline decoration-dashed decoration-1 underline-offset-2;
+  @apply hover:decoration-solid hover:text-accent-700 dark:hover:text-accent-300;
+  @apply transition-colors duration-150;
+}
+
+@utility growth-seedling {
+  /* Growth status indicators */
+  @apply text-green-500;
+}
+
+@utility growth-budding {
+  @apply text-amber-500;
+}
+
+@utility growth-evergreen {
+  @apply text-emerald-600 dark:text-emerald-400;
+}
+
+@utility highlight {
+  /* Highlight (==text==) */
+  @apply bg-accent-200 dark:bg-accent-800/50 px-1 py-0.5 rounded-sm;
+}
+
+@utility mermaid-container {
+  /* Mermaid diagrams */
+  @apply flex justify-center overflow-x-auto;
+}
+
+@utility mermaid {
+  @apply max-w-full;
+
+  & svg {
+    @apply max-w-full h-auto;
+  }
+}
+
+@utility callout {
+  /* Callout blocks */
+  @apply p-4 rounded-lg border-l-4 my-4;
+}
+
+@utility callout-note {
+  @apply bg-blue-50 border-blue-500 dark:bg-blue-950/50 dark:border-blue-400;
+}
+
+@utility callout-tip {
+  @apply bg-green-50 border-green-500 dark:bg-green-950/50 dark:border-green-400;
+}
+
+@utility callout-warning {
+  @apply bg-amber-50 border-amber-500 dark:bg-amber-950/50 dark:border-amber-400;
+}
+
+@utility callout-danger {
+  @apply bg-red-50 border-red-500 dark:bg-red-950/50 dark:border-red-400;
+}
+
+@utility callout-info {
+  @apply bg-purple-50 border-purple-500 dark:bg-purple-950/50 dark:border-purple-400;
+}
+
+@utility card {
+  /* Card styles */
+  @apply bg-white dark:bg-primary-900;
+  @apply border border-primary-200 dark:border-primary-800;
+  @apply rounded-xl shadow-xs;
+  @apply transition-shadow duration-200;
+
+  &:hover {
+    @apply shadow-md;
+  }
+}
+
+/* ============================================================================
+   PROSE OVERRIDES (for content)
+   ============================================================================ */
+
+@utility prose-mycelium {
+  @apply prose dark:prose-invert;
+  @apply max-w-none;
+
+  /* Code blocks */
+  & pre {
+    @apply bg-primary-900 dark:bg-primary-950;
+    @apply border border-primary-800 dark:border-primary-700;
+    @apply rounded-lg;
+  }
+
+  & code {
+    @apply text-accent-600 dark:text-accent-400;
+    @apply bg-primary-100 dark:bg-primary-800;
+    @apply px-1.5 py-0.5 rounded-sm;
+    @apply text-sm font-mono;
+  }
+
+  & pre code {
+    @apply bg-transparent dark:bg-transparent p-0;
+    @apply text-primary-100;
+  }
+
+  /* Prevent any background colors on code block content - let Shiki handle it */
+  & pre code * {
+    background: none !important;
+    background-color: transparent !important;
+  }
+  & pre code span {
+    background: none !important;
+    background-color: transparent !important;
+  }
+  & pre .line {
+    background: none !important;
+    background-color: transparent !important;
+  }
+  & pre .line * {
+    background: none !important;
+    background-color: transparent !important;
+  }
+
+  /* Links in prose */
+  & a {
+    @apply text-accent-600 dark:text-accent-400;
+    @apply no-underline hover:underline;
+  }
+
+  /* Headings */
+  & h1 {
+    @apply text-primary-900 dark:text-primary-100;
+    @apply font-semibold;
+  }
+  & h2 {
+    @apply text-primary-900 dark:text-primary-100;
+    @apply font-semibold;
+  }
+  & h3 {
+    @apply text-primary-900 dark:text-primary-100;
+    @apply font-semibold;
+  }
+  & h4 {
+    @apply text-primary-900 dark:text-primary-100;
+    @apply font-semibold;
+  }
+
+  & h2 {
+    @apply border-b border-primary-200 dark:border-primary-800 pb-2;
+  }
+
+  /* Blockquotes */
+  & blockquote {
+    @apply border-l-4 border-accent-400 dark:border-accent-600;
+    @apply italic text-primary-700 dark:text-primary-300;
+  }
+}
+
+@utility line {
+  .prose-mycelium pre & {
+    background: none !important;
+    background-color: transparent !important;
+  }
+
+  .prose-mycelium pre & * {
+    background: none !important;
+    background-color: transparent !important;
+  }
+}
+
+@layer utilities {
+  /* ============================================================================
    THEME: Sage (Default)
    Therapeutic, calming sage greens - gentle on the eyes
    Based on color therapy principles for relaxation and focus
    ============================================================================ */
 
-:root {
-  /* Primary - Sage greens (muted, therapeutic tones) */
-  --color-primary-50: 247 250 247;   /* #f7faf7 - barely there green */
-  --color-primary-100: 236 243 236;  /* #ecf3ec - soft sage mist */
-  --color-primary-200: 214 228 214;  /* #d6e4d6 - light sage */
-  --color-primary-300: 181 204 181;  /* #b5ccb5 - gentle sage */
-  --color-primary-400: 143 176 143;  /* #8fb08f - sage */
-  --color-primary-500: 111 148 111;  /* #6f946f - balanced sage */
-  --color-primary-600: 88 124 88;    /* #587c58 - deep sage */
-  --color-primary-700: 71 100 71;    /* #476447 - forest sage */
-  --color-primary-800: 56 79 56;     /* #384f38 - dark sage */
-  --color-primary-900: 44 62 44;     /* #2c3e2c - deep forest */
-  --color-primary-950: 26 38 26;     /* #1a261a - night forest */
+  :root {
+    /* Primary - Sage greens (muted, therapeutic tones) */
+    --color-primary-50: 247 250 247; /* #f7faf7 - barely there green */
+    --color-primary-100: 236 243 236; /* #ecf3ec - soft sage mist */
+    --color-primary-200: 214 228 214; /* #d6e4d6 - light sage */
+    --color-primary-300: 181 204 181; /* #b5ccb5 - gentle sage */
+    --color-primary-400: 143 176 143; /* #8fb08f - sage */
+    --color-primary-500: 111 148 111; /* #6f946f - balanced sage */
+    --color-primary-600: 88 124 88; /* #587c58 - deep sage */
+    --color-primary-700: 71 100 71; /* #476447 - forest sage */
+    --color-primary-800: 56 79 56; /* #384f38 - dark sage */
+    --color-primary-900: 44 62 44; /* #2c3e2c - deep forest */
+    --color-primary-950: 26 38 26; /* #1a261a - night forest */
 
-  /* Accent - Warm terracotta (grounding, earthy) */
-  --color-accent-50: 253 250 247;    /* #fdfaf7 */
-  --color-accent-100: 250 241 235;   /* #faf1eb */
-  --color-accent-200: 245 224 209;   /* #f5e0d1 */
-  --color-accent-300: 235 198 171;   /* #ebc6ab */
-  --color-accent-400: 217 166 130;   /* #d9a682 */
-  --color-accent-500: 194 139 97;    /* #c28b61 */
-  --color-accent-600: 166 112 74;    /* #a6704a */
-  --color-accent-700: 138 90 60;     /* #8a5a3c */
-  --color-accent-800: 112 74 51;     /* #704a33 */
-  --color-accent-900: 92 62 44;      /* #5c3e2c */
-  --color-accent-950: 51 33 23;      /* #332117 */
+    /* Accent - Warm terracotta (grounding, earthy) */
+    --color-accent-50: 253 250 247; /* #fdfaf7 */
+    --color-accent-100: 250 241 235; /* #faf1eb */
+    --color-accent-200: 245 224 209; /* #f5e0d1 */
+    --color-accent-300: 235 198 171; /* #ebc6ab */
+    --color-accent-400: 217 166 130; /* #d9a682 */
+    --color-accent-500: 194 139 97; /* #c28b61 */
+    --color-accent-600: 166 112 74; /* #a6704a */
+    --color-accent-700: 138 90 60; /* #8a5a3c */
+    --color-accent-800: 112 74 51; /* #704a33 */
+    --color-accent-900: 92 62 44; /* #5c3e2c */
+    --color-accent-950: 51 33 23; /* #332117 */
 
-  /* Background for light mode - warm paper tones */
-  --bg-primary: 252 251 249;         /* #fcfbf9 - warm white */
-  --bg-secondary: 247 246 243;       /* #f7f6f3 - light parchment */
-  --text-primary: var(--color-primary-900);
-  --text-secondary: var(--color-primary-700);
-}
+    /* Background for light mode - warm paper tones */
+    --bg-primary: 252 251 249; /* #fcfbf9 - warm white */
+    --bg-secondary: 247 246 243; /* #f7f6f3 - light parchment */
+    --text-primary: var(--color-primary-900);
+    --text-secondary: var(--color-primary-700);
+  }
 
-/* Dark mode colors - cozy, low contrast for night reading */
-.dark {
-  --bg-primary: 24 28 24;            /* #181c18 - soft black with green */
-  --bg-secondary: 32 38 32;          /* #202620 - elevated dark */
-  --text-primary: 226 232 226;       /* #e2e8e2 - soft white */
-  --text-secondary: 176 192 176;     /* #b0c0b0 - muted sage */
-}
+  /* Dark mode colors - cozy, low contrast for night reading */
+  .dark {
+    --bg-primary: 24 28 24; /* #181c18 - soft black with green */
+    --bg-secondary: 32 38 32; /* #202620 - elevated dark */
+    --text-primary: 226 232 226; /* #e2e8e2 - soft white */
+    --text-secondary: 176 192 176; /* #b0c0b0 - muted sage */
+  }
 
-/* ============================================================================
+  /* ============================================================================
    BASE STYLES
    ============================================================================ */
+}
 
 @layer base {
   html {
@@ -104,152 +296,6 @@
 
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-primary-400 dark:bg-primary-600;
-  }
-}
-
-/* ============================================================================
-   COMPONENT STYLES
-   ============================================================================ */
-
-@layer components {
-  /* Wikilinks (internal links) */
-  .wikilink {
-    @apply text-accent-600 dark:text-accent-400;
-    @apply underline decoration-dashed decoration-1 underline-offset-2;
-    @apply hover:decoration-solid hover:text-accent-700 dark:hover:text-accent-300;
-    @apply transition-colors duration-150;
-  }
-
-  /* Growth status indicators */
-  .growth-seedling {
-    @apply text-green-500;
-  }
-
-  .growth-budding {
-    @apply text-amber-500;
-  }
-
-  .growth-evergreen {
-    @apply text-emerald-600 dark:text-emerald-400;
-  }
-
-  /* Highlight (==text==) */
-  .highlight {
-    @apply bg-accent-200 dark:bg-accent-800/50 px-1 py-0.5 rounded;
-  }
-
-  /* Mermaid diagrams */
-  .mermaid-container {
-    @apply flex justify-center overflow-x-auto;
-  }
-
-  .mermaid {
-    @apply max-w-full;
-  }
-
-  .mermaid svg {
-    @apply max-w-full h-auto;
-  }
-
-  /* Callout blocks */
-  .callout {
-    @apply p-4 rounded-lg border-l-4 my-4;
-  }
-
-  .callout-note {
-    @apply bg-blue-50 border-blue-500 dark:bg-blue-950/50 dark:border-blue-400;
-  }
-
-  .callout-tip {
-    @apply bg-green-50 border-green-500 dark:bg-green-950/50 dark:border-green-400;
-  }
-
-  .callout-warning {
-    @apply bg-amber-50 border-amber-500 dark:bg-amber-950/50 dark:border-amber-400;
-  }
-
-  .callout-danger {
-    @apply bg-red-50 border-red-500 dark:bg-red-950/50 dark:border-red-400;
-  }
-
-  .callout-info {
-    @apply bg-purple-50 border-purple-500 dark:bg-purple-950/50 dark:border-purple-400;
-  }
-
-  /* Card styles */
-  .card {
-    @apply bg-white dark:bg-primary-900;
-    @apply border border-primary-200 dark:border-primary-800;
-    @apply rounded-xl shadow-sm;
-    @apply transition-shadow duration-200;
-  }
-
-  .card:hover {
-    @apply shadow-md;
-  }
-}
-
-/* ============================================================================
-   PROSE OVERRIDES (for content)
-   ============================================================================ */
-
-@layer utilities {
-  .prose-mycelium {
-    @apply prose dark:prose-invert;
-    @apply max-w-none;
-  }
-
-  /* Code blocks */
-  .prose-mycelium pre {
-    @apply bg-primary-900 dark:bg-primary-950;
-    @apply border border-primary-800 dark:border-primary-700;
-    @apply rounded-lg;
-  }
-
-  .prose-mycelium code {
-    @apply text-accent-600 dark:text-accent-400;
-    @apply bg-primary-100 dark:bg-primary-800;
-    @apply px-1.5 py-0.5 rounded;
-    @apply text-sm font-mono;
-  }
-
-  .prose-mycelium pre code {
-    @apply bg-transparent dark:bg-transparent p-0;
-    @apply text-primary-100;
-  }
-
-  /* Prevent any background colors on code block content - let Shiki handle it */
-  .prose-mycelium pre code *,
-  .prose-mycelium pre code span,
-  .prose-mycelium pre .line,
-  .prose-mycelium pre .line * {
-    background: none !important;
-    background-color: transparent !important;
-  }
-
-  /* Links in prose */
-  .prose-mycelium a {
-    @apply text-accent-600 dark:text-accent-400;
-    @apply no-underline hover:underline;
-  }
-
-  /* Headings */
-  .prose-mycelium h1,
-  .prose-mycelium h2,
-  .prose-mycelium h3,
-  .prose-mycelium h4 {
-    @apply text-primary-900 dark:text-primary-100;
-    @apply font-semibold;
-  }
-
-  .prose-mycelium h2 {
-    @apply border-b border-primary-200 dark:border-primary-800 pb-2;
-  }
-
-  /* Blockquotes */
-  .prose-mycelium blockquote {
-    @apply border-l-4 border-accent-400 dark:border-accent-600;
-    @apply italic text-primary-700 dark:text-primary-300;
   }
 }
 
@@ -610,7 +656,7 @@ details.collapsible details.collapsible {
 /* Lightbox overlay */
 .image-lightbox {
   @apply fixed inset-0 z-50 hidden;
-  @apply bg-black/90 backdrop-blur-sm;
+  @apply bg-black/90 backdrop-blur-xs;
   @apply items-center justify-center;
 }
 
@@ -633,7 +679,7 @@ details.collapsible details.collapsible {
 
 .image-lightbox-caption {
   @apply absolute bottom-4 left-1/2 -translate-x-1/2;
-  @apply px-4 py-2 bg-black/70 text-white text-sm rounded;
+  @apply px-4 py-2 bg-black/70 text-white text-sm rounded-sm;
   @apply max-w-[80vw] text-center;
 }
 

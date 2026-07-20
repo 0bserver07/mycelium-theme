@@ -58,14 +58,14 @@ const { defaultLayout = 'grid', storageKey = 'layout-preference' } = Astro.props
     function setLayout(layout: string) {
       // Update buttons
       if (layout === 'grid') {
-        gridBtn.classList.add('bg-white', 'dark:bg-primary-700', 'text-accent-600', 'dark:text-accent-400', 'shadow-sm');
+        gridBtn.classList.add('bg-white', 'dark:bg-primary-700', 'text-accent-600', 'dark:text-accent-400', 'shadow-xs');
         gridBtn.classList.remove('text-primary-500', 'dark:text-primary-400');
-        listBtn.classList.remove('bg-white', 'dark:bg-primary-700', 'text-accent-600', 'dark:text-accent-400', 'shadow-sm');
+        listBtn.classList.remove('bg-white', 'dark:bg-primary-700', 'text-accent-600', 'dark:text-accent-400', 'shadow-xs');
         listBtn.classList.add('text-primary-500', 'dark:text-primary-400');
       } else {
-        listBtn.classList.add('bg-white', 'dark:bg-primary-700', 'text-accent-600', 'dark:text-accent-400', 'shadow-sm');
+        listBtn.classList.add('bg-white', 'dark:bg-primary-700', 'text-accent-600', 'dark:text-accent-400', 'shadow-xs');
         listBtn.classList.remove('text-primary-500', 'dark:text-primary-400');
-        gridBtn.classList.remove('bg-white', 'dark:bg-primary-700', 'text-accent-600', 'dark:text-accent-400', 'shadow-sm');
+        gridBtn.classList.remove('bg-white', 'dark:bg-primary-700', 'text-accent-600', 'dark:text-accent-400', 'shadow-xs');
         gridBtn.classList.add('text-primary-500', 'dark:text-primary-400');
       }
 

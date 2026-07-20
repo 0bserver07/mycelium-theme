@@ -47,7 +47,7 @@ const searchData = JSON.stringify(searchIndex);
     aria-label="Search"
   >
     <!-- Backdrop -->
-    <div id="command-palette-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+    <div id="command-palette-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-xs"></div>
 
     <!-- Panel -->
     <div class="relative flex items-start justify-center pt-[15vh] px-4">
@@ -67,11 +67,11 @@ const searchData = JSON.stringify(searchIndex);
           <input
             id="command-palette-input"
             type="text"
-            class="w-full px-4 py-4 bg-transparent text-primary-900 dark:text-primary-100 placeholder-primary-500 focus:outline-none"
+            class="w-full px-4 py-4 bg-transparent text-primary-900 dark:text-primary-100 placeholder-primary-500 focus:outline-hidden"
             placeholder="Search notes, pages, and more..."
             autocomplete="off"
           />
-          <kbd class="hidden sm:flex items-center px-2 py-1 mr-4 text-xs font-mono text-primary-500 bg-primary-100 dark:bg-primary-800 rounded">
+          <kbd class="hidden sm:flex items-center px-2 py-1 mr-4 text-xs font-mono text-primary-500 bg-primary-100 dark:bg-primary-800 rounded-sm">
             ESC
           </kbd>
         </div>
@@ -207,7 +207,7 @@ const searchData = JSON.stringify(searchIndex);
           .map(
             ({ item }) => `
           <a href="${item.url}" class="command-palette-item flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary-100 dark:hover:bg-primary-800">
-            <span class="text-xs px-1.5 py-0.5 rounded bg-primary-100 dark:bg-primary-800 text-primary-600 dark:text-primary-400">
+            <span class="text-xs px-1.5 py-0.5 rounded-sm bg-primary-100 dark:bg-primary-800 text-primary-600 dark:text-primary-400">
               ${item.type}
             </span>
             <div class="flex-1 min-w-0">

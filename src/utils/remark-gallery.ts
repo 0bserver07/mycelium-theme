@@ -31,7 +31,7 @@ function createGalleryHtml(images: GalleryImage[]): string {
       (img, i) => `
     <button
       type="button"
-      class="gallery-thumbnail group relative aspect-square overflow-hidden rounded-lg bg-primary-100 dark:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-accent-500"
+      class="gallery-thumbnail group relative aspect-square overflow-hidden rounded-lg bg-primary-100 dark:bg-primary-900 focus:outline-hidden focus:ring-2 focus:ring-accent-500"
       data-index="${i}"
       data-src="${img.src}"
       data-alt="${escapeHtml(img.alt)}"
@@ -46,7 +46,7 @@ function createGalleryHtml(images: GalleryImage[]): string {
       <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
       ${
         img.caption
-          ? `<div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+          ? `<div class="absolute bottom-0 left-0 right-0 p-2 bg-linear-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
         <p class="text-white text-sm truncate">${escapeHtml(img.caption)}</p>
       </div>`
           : ''

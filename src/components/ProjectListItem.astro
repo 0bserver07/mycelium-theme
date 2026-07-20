@@ -34,7 +34,7 @@ const { title, description, status, technologies, repo, url } = project.data;
       ]}>
         {title}
         {featured && (
-          <span class="ml-2 px-2 py-0.5 text-xs font-medium bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 rounded">
+          <span class="ml-2 px-2 py-0.5 text-xs font-medium bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 rounded-sm">
             Featured
           </span>
         )}
@@ -55,7 +55,7 @@ const { title, description, status, technologies, repo, url } = project.data;
     {technologies && technologies.length > 0 && (
       <div class="flex flex-wrap gap-2">
         {technologies.map((tech: string) => (
-          <span class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded">
+          <span class="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-sm">
             {tech}
           </span>
         ))}

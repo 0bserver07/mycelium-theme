@@ -1,6 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
@@ -28,12 +28,15 @@ export default defineConfig({
   site: 'https://example.com', // Update with your site URL
 
   integrations: [
-    tailwind({
-      applyBaseStyles: false, // We'll use our own base styles
-    }),
     mdx(),
     sitemap(),
   ],
+
+  // Tailwind CSS v4 is wired via its Vite plugin (the former @astrojs/tailwind
+  // integration is deprecated and caps at Astro 5 / Tailwind 3).
+  vite: {
+    plugins: [tailwindcss()],
+  },
 
   markdown: {
     remarkPlugins: [
