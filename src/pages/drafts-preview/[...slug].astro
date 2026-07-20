@@ -1,0 +1,74 @@
+---
+/**
+ * DEV-ONLY draft preview.
+ *
+ * Renders the `drafts/` folder through the real PostLayout + render() pipeline,
+ * so a draft looks exactly like a published post. getStaticPaths returns [] in a
+ * production build — no pages are generated, nothing enters the sitemap, and the
+ * drafts never reach the live site. Run `npm run dev` and open /drafts-preview.
+ *
+ * The drafts folder lives outside src/content/ (the Obsidian vault); relocate it
+ * by changing DRAFTS_DIR in src/content.config.ts.
+ */
+import { getCollection, render } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  if (import.meta.env.PROD) return []; // never emit anything in production
+  const drafts = (await getCollection('drafts'))
+    .filter((d) => d.id.toLowerCase() !== 'readme')
+    .sort((a, b) => a.id.localeCompare(b.id));
+  return [
+    { params: { slug: undefined }, props: { post: null, drafts } },
+    ...drafts.map((post) => ({ params: { slug: post.id }, props: { post, drafts } })),
+  ];
+}
+
+const { post, drafts } = Astro.props;
+let Content = null;
+let headings = [];
+if (post) {
+  const rendered = await render(post);
+  Content = rendered.Content;
+  headings = rendered.headings;
+}
+---
+{post ? (
+  <PostLayout post={post} headings={headings} effectiveGrowth={post.data.growth}>
+    <Content />
+  </PostLayout>
+) : (
+  <html lang="en">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="robots" content="noindex" />
+      <title>Draft preview</title>
+      <style set:html={`
+        body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;max-width:760px;margin:0 auto;padding:30px 20px 80px;color:#1d2620;background:#f7f7f2}
+        @media(prefers-color-scheme:dark){body{background:#101511;color:#e8ede6}}
+        a{color:#2e8b46;text-decoration:none;font-weight:600}a:hover{text-decoration:underline}
+        h1{font-size:1.7rem}ul{padding:0}li{margin:16px 0;list-style:none;border-bottom:1px solid rgba(128,128,128,.18);padding-bottom:14px}
+        .d{color:#8a908a;font-weight:400;font-size:.9rem;margin-top:3px}
+        .banner{background:#2e8b46;color:#fff;padding:6px 12px;border-radius:6px;font-size:13px;font-weight:600;display:inline-block;margin-bottom:22px}
+        .empty{color:#8a908a}
+      `} />
+    </head>
+    <body>
+      <span class="banner">LOCAL DRAFT PREVIEW · not published · drafts/</span>
+      <h1>Drafts ({drafts.length})</h1>
+      {drafts.length === 0 ? (
+        <p class="empty">No drafts yet. Add a <code>.md</code> or <code>.mdx</code> file to <code>drafts/</code> and refresh.</p>
+      ) : (
+        <ul>
+          {drafts.map((d) => (
+            <li>
+              <a href={`/drafts-preview/${d.id}`}>{d.data.title}</a>
+              <div class="d">{d.data.description}</div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </body>
+  </html>
+)}

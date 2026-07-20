@@ -16,6 +16,11 @@ const confidenceEnum = z.enum(['high', 'medium', 'low', 'speculative']).optional
 // Importance level (1-5 stars)
 const importanceLevel = z.number().min(1).max(5).optional();
 
+// Drafts live OUTSIDE the Obsidian vault (src/content/) so they never appear in
+// the published garden. Change this one path to relocate them (e.g. to
+// './feedback/drafts' to match a private notes folder). See src/pages/drafts-preview/.
+const DRAFTS_DIR = './drafts';
+
 // Posts Collection - Main blog/garden content
 const postsCollection = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/posts' }),
@@ -105,9 +110,36 @@ const docsCollection = defineCollection({
   }),
 });
 
+// Drafts Collection — DEV-ONLY. Loads DRAFTS_DIR so the /drafts-preview route
+// can render in-progress drafts through the real post pipeline. That route emits
+// nothing in a production build, so nothing here ships. Schema is permissive
+// (safe defaults) so a half-written draft never breaks `astro build`.
+const draftsCollection = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: DRAFTS_DIR }),
+  schema: z.object({
+    title: z.string().default('(untitled draft)'),
+    description: z.string().optional(),
+    growth: growthStatusEnum,
+    growthLocked: z.boolean().optional().default(false),
+    planted: z.coerce.date().default(() => new Date()),
+    lastTended: z.coerce.date().optional(),
+    series: z.string().optional(),
+    seriesOrder: z.number().optional(),
+    tags: z.array(z.string()).optional(),
+    draft: z.boolean().optional().default(true),
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+    noIndex: z.boolean().optional(),
+    confidence: confidenceEnum,
+    importance: importanceLevel,
+    dropcap: z.union([z.boolean(), z.literal('accent')]).optional(),
+  }),
+});
+
 export const collections = {
   posts: postsCollection,
   pages: pagesCollection,
   projects: projectsCollection,
   docs: docsCollection,
+  drafts: draftsCollection,
 };
