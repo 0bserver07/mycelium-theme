@@ -111,16 +111,18 @@ const searchData = JSON.stringify(searchIndex);
   </div>
 )}
 
-<script define:vars={{ searchData }}>
-  // Import Fuse.js dynamically
-  let Fuse;
-  let fuse;
-  const searchIndex = JSON.parse(searchData);
+<!-- The index ships as JSON and the script below is bundled. A define:vars
+     script is inlined without being compiled or bundled, so its TypeScript was a
+     syntax error and import('fuse.js') could not resolve in the browser. -->
+<script type="application/json" id="command-palette-data" set:html={searchData.replace(/</g, '\\u003c')}></script>
+<script>
+  import Fuse from 'fuse.js';
+
+  let fuse: Fuse<any> | undefined;
+  const searchIndex = JSON.parse(document.getElementById('command-palette-data')?.textContent || '[]');
 
   async function initSearch() {
-    if (!Fuse) {
-      const module = await import('fuse.js');
-      Fuse = module.default;
+    if (!fuse) {
       fuse = new Fuse(searchIndex, {
         keys: ['title', 'description', 'tags'],
         threshold: 0.3,

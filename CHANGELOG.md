@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- **Ctrl+K search never opened.** `CommandPalette.astro` used a `define:vars`
+  script, which Astro inlines without compiling or bundling. Its TypeScript
+  cast was a syntax error in the browser ("Unexpected identifier 'as'"), and
+  `import('fuse.js')` could not resolve a bare module name there either. The
+  index now ships in a `<script type="application/json">` tag and the palette
+  script is bundled, so it compiles and imports Fuse normally.
+
 ## 2.0.0 (2026-07-20)
 
 Major dependency modernization plus a new draft preview system.
